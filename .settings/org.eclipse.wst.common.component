@@ -5,8 +5,8 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/generated/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
-        <property name="context-root" value="mirador"/>
         <property name="java-output-path" value="/mirador/target/classes"/>
+        <property name="context-root" value="Restaurant-Mirador"/>
+        <property name="component.exclusion.patterns" value="WEB-INF/lib/stax-api-1.0.1.jar"/>
     </wb-module>
 </project-modules>
