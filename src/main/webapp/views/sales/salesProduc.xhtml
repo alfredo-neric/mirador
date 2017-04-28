@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" sticky="true" />
+
+				<p:remoteCommand name="find" id="find"
+					actionListener="#{salesMB.findProduct}"
+					update=":form1:details, :form1:folio, :form1:amountProducs, :form1:subtotal, :form1:adeudo, :form1:adeudoActual, :form1:abonar, :form1:codeBar" />
+				<p:remoteCommand name="updateDetails"
+					actionListener="#{salesMB.findDetails}" update=":form1:details" />
+				<p:panel header="Venta de Productos Dulceria Marisol" id="panel"
+					styleClass="blue  col-md-10 col-centered row-centered shadow-panel">
+					<p:panelGrid id="gridHead">
+						<p:row>
+							<p:column colspan="4" style="text-align: right;">
+								<p:outputLabel value="Fecha:" />
+							</p:column>
+							<p:column style="text-align: left;">
+								<p:calendar id="fecha" disabled="true" size="10" showOn="button"
+									value="#{salesMB.dateEmition}" mask="true" pattern="dd/MM/yyyy">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</p:calendar>
+								 &nbsp;
+								  &nbsp;
+								<p:outputLabel value="Folio:" />
+								&nbsp;
+								  &nbsp;
+								<p:inputText id="folio" value="#{salesMB.folio}" readonly="true"
+									size="6">
+									<f:convertNumber pattern="000000" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Cliente:" style="" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu id="idClient" value="#{salesMB.clvClient}">
+									<f:selectItems value="#{salesMB.listClient}" var="client"
+										itemValue="#{client.aliasClient}"
+										itemLabel="#{client.aliasClient}" />
+									<p:ajax event="change" listener="#{salesMB.findClient}"
+										update="@form" />
+								</p:selectOneMenu>
+							</p:column>
+							<p:column>
+								<p:inputText id="cliente"
+									value="#{salesMB.tcCliente.nameClient} #{salesMB.tcCliente.lastName}"
+									readonly="true" size="50" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="Direccion: " />
+							</p:column>
+							<p:column>
+								<p:inputText id="address" value="#{salesMB.tcCliente.address}"
+									readonly="true" size="50" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="Telefono:" />
+							</p:column>
+							<p:column>
+								<p:inputText id="phone" value="#{salesMB.tcCliente.phoneNumber}"
+									readonly="true" size="15" />
+							</p:column>
+
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="e-mail:" />
+							</p:column>
+							<p:column colspan="3">
+								<p:inputText id="email" value="#{salesMB.tcCliente.EMail}"
+									readonly="true" size="70" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="7" style="background-image:url('rayas.jpg');">
+								<center>
+									<p:selectOneRadio id="sales" value="#{salesMB.typeSale}">
+										<f:selectItem itemLabel="Mayoreo" itemValue="1" />
+										<f:selectItem itemLabel="Menudeo" itemValue="2" />
+									</p:selectOneRadio>
+								</center>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="7" style="background-image:url('rayas.jpg');">
+								<p:commandButton value="Crear" icon="ui-icon-document"
+									id="crear"
+									update=":form1:details, :form1:folio, :form1:amountProducs, :form1:subtotal, :form1:adeudo, :form1:adeudoActual, :form1:abonar, :form1:codeBar"
+									actionListener="#{salesMB.createFactur}" />
+								<!-- <p:commandButton value="Agregar" icon="ui-icon-circle-plus"
+									id="agregar" disabled="#{salesMB.bNew}"
+									update=":form1:details, :form1:folio, :form1:amountProducs, :form1:subtotal, :form1:adeudo, :form1:adeudoActual, :form1:abonar"
+									actionListener="#{salesMB.addDatil}" /> -->
+
+							</p:column>
+						</p:row>
+
+					</p:panelGrid>
+					<p:panelGrid styleClass="col-centered row-centered" id="gridFind">
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Codigo de Barras" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="Clave Producto" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:inputText id="codeBar" value="#{salesMB.codeBar}"
+									onkeypress="if(event.keyCode == 13) {find();return false;}"
+									disabled="#{salesMB.bNew}" />
+							</p:column>
+							<p:column>
+								<!-- 	<p:inputText value="#{salesMB.codeBar}" id="clvPro"
+									ondblclick="PF('productsWgt').show();"
+									onkeypress="if(event.keyCode == 13) {find();return false;}" /> -->
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+						<h:panelGrid columns="2">
+							<h:graphicImage value="loadimg.gif"
+								style="margin-right: 12px; vertical-align: middle;" />
+							<h:outputText value="Por favor espere..."
+								style="white-space: nowrap;" />
+						</h:panelGrid>
+					</pe:blockUI>
+					<p:dataTable id="details" var="detail"
+						value="#{salesMB.dataModeldetail}" editable="true"
+						emptyMessage="No se han agregado productos a la lista"
+						paginator="true" selectionMode="single" rows="20" lazy="true"
+						rowIndexVar="rowIndex"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						widgetVar="detailsWdg" selection="#{salesMB.selectDetail}"
+						rowKey="#{details.id}">
+						<p:ajax event="rowEdit" listener="#{salesMB.onRowEdit}"
+							update=":form1:msgs, :form1:amountProducs, :form1:subtotal, :form1:adeudo, :form1:adeudoActual, form1:abonar" />
+						<p:ajax event="rowEditInit" listener="#{salesMB.onRowEditInit}"
+							update=":form1:msgs" />
+						<p:ajax event="rowEditCancel" listener="#{salesMB.onRowCancel}"
+							update=":form1:msgs, :form1:details" oncomplete="updateDetails()" />
+						<p:column headerText="Codigo de Barras" style="width:15%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{detail.barcode}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="barcode" value="#{detail.barcode}"
+										onkeypress="if(event.keyCode == 13) {return false;}"
+										style="width:100%">
+										<p:ajax event="change"
+											update="barcode, clvProducto, nameProduct, amount, priceBuy, total"
+											listener="#{salesMB.findProduct(rowIndex)}" />
+										<!-- <p:ajax event="change"
+											update=""
+											listener="#{salesMB.findProduct(rowIndex)}" /> -->
+									</p:inputText>
+
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Clave Producto" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{detail.clvProducto}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="clvProducto" value="#{detail.clvProducto}"
+										ondblclick="PF('productsWgt').show();"
+										onkeyup="this.value=this.value.toUpperCase();" maxlength="5"
+										style="width:100%">
+										<!-- <p:ajax event="change"
+											update="barcode, clvProducto, nameProduct, amount, priceBuy, total"
+											listener="#{salesMB.findProduct(rowIndex)}" /> -->
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Nombre Producto" style="width:36%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{detail.nameProduct}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="nameProduct" value="#{detail.nameProduct}"
+										style="width:100%" disabled="true" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Cantidad" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{detail.amount}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="amount" value="#{detail.amount}"
+										style="width:100%"
+										onkeypress="if(event.keyCode == 13) {jQuery('#form1\\:details span.ui-icon-check').last().click();return false}">
+										<p:ajax event="change"
+											listener="#{salesMB.amountProductByPrice}" update="total" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Precio" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{detail.priceBuy}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="priceBuy" value="#{detail.priceBuy}"
+										onkeypress="if(event.keyCode == 13) {jQuery('#form1\\:details span.ui-icon-check').last().click();return false}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Total" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{detail.total}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="total" value="#{detail.total}" disabled="true"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column style="width:8%">
+							<p:rowEditor />
+						</p:column>
+
+						<p:column style="width:8%" headerText="Borrar">
+							<p:commandLink actionListener="#{salesMB.deleteProducto}"
+								update=":form1:msgs, :form1:details"
+								image="ui-icon ui-icon-close" title="Delete">
+								<f:setPropertyActionListener value="#{details}"
+									target="#{salesMB.selectDetail}" />
+								<h:outputText styleClass="ui-icon ui-icon-close" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid id="gridProducts">
+						<p:row>
+							<p:column style="width:70%; text-align: right;">
+								<p:outputLabel value="Total Productos:" />
+							</p:column>
+							<p:column>
+								<p:inputText readonly="true"
+									value="#{salesMB.twFacturaHead.amount}" id="amountProducs"
+									size="10" />
+							</p:column>
+							<p:column style="width:5%;  text-align: right;">
+								<p:outputLabel value="Total" />
+							</p:column>
+							<p:column>
+								<p:inputText readonly="true" id="subtotal"
+									value="#{salesMB.twFacturaHead.subtotal}" size="15" />
+							</p:column>
+							<p:column rowspan="5">
+								<p:commandLink actionListener="#{salesMB.paySale}" id="paySale"
+									update=":form1:msgs, :form1:adeudo">
+									<p:graphicImage value="print.png" />
+								</p:commandLink>
+							</p:column>
+
+						</p:row>
+						<p:row>
+							<p:column colspan="3" style="width:73%; text-align: right;">
+								<p:outputLabel value="Adeudo Anterior" />
+							</p:column>
+							<p:column>
+								<p:inputText id="adeudo" value="#{salesMB.twFacturaHead.total}"
+									readonly="true" size="15" maxlength="15">
+								</p:inputText>
+							</p:column>
+
+						</p:row>
+						<p:row>
+							<p:column colspan="3" style="width:73%; text-align: right; ">
+								<p:outputLabel value="Adeudo Actual" />
+							</p:column>
+							<p:column>
+								<p:inputText id="adeudoActual"
+									value="#{salesMB.twFacturaHead.moneyOweb}" readonly="true"
+									size="15" maxlength="15">
+								</p:inputText>
+							</p:column>
+
+						</p:row>
+						<p:row>
+							<p:column colspan="3" style="width:73%; text-align: right;">
+								<p:outputLabel value="Pagar/Abonar" />
+							</p:column>
+							<p:column>
+								<p:inputText id="abonar"
+									value="#{salesMB.twFacturaHead.moneyManure}" size="15">
+									<f:convertNumber pattern="###,###.##" currencySymbol="$"
+										type="currency" />
+									<p:ajax event="keyup" listener="#{salesMB.operationSale}"
+										update=":form1:sActual, :form1:msgs" />
+								</p:inputText>
+
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column colspan="3" style="width:73%; text-align: right;">
+								<p:outputLabel value="Cambio" />
+							</p:column>
+							<p:column>
+								<p:inputText id="sActual" value="#{salesMB.sActual}" size="15">
+									<f:convertNumber pattern="###,###.##" currencySymbol="$"
+										type="currency" />
+								</p:inputText>
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:dialog width="700" widgetVar="productsWgt" id="productsWgt"
+						styleClass="blue">
+						<p:panel header="Busqueda de Productos" id="panelFind"
+							styleClass="blue  col-md- col-centered row-centered shadow-panel">
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<p:outputLabel value="Clave producto" />
+									</p:column>
+									<p:column>
+										<p:inputText id="idProduct" value="#{salesMB.clvProduc}"
+											size="5" maxlength="5">
+											<pe:keyFilter mask="alphanum" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<!-- 	<p:confirmDialog global="true" widgetVar="confirm" id="pagar"
+							styleClass="blue  col-md- col-centered row-centered shadow-panel"
+							showEffect="fade" hideEffect="fade" header="Pagar">
+							<p:panelGrid>
+
+								<p:row>
+									<p:column colspan="3"
+										style="width:73%; text-align: right;font-size: 30px;">
+										<p:outputLabel value="Abonar" />
+									</p:column>
+									<p:column style="font-size: 30px;">
+										<p:inputText id="abonar"
+											value="#{salesMB.pagar}">
+											
+										</p:inputText>
+										<pe:inputNumber id="AbonarPagar"
+									value="#{salesMB.twFacturaHead.moneyManure}">
+									<p:ajax event="keyup" listener=""
+										update="AbonarPagar, adeudoActual" />
+								</pe:inputNumber>
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column>
+										<p:commandButton value="Pagar" id="payPalSale"
+											actionListener="#{salesMB.paySales}" icon="ui-icon-check" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:commandButton value="Pagar" type="button" id="pagar"
+								actionListener="#{salesMB.paySales}"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="Cancel" type="button" id="cancelar"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+
+						</p:confirmDialog> -->
+							<p:dataTable id="productos" var="produc"
+								value="#{salesMB.dataModelProduct}" selectionMode="single"
+								rows="20" selection="#{salesMB.selectProducto}"
+								rowIndexVar="rowIndex" lazy="true"
+								emptyMessage="No existen productos en la base de datos"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								widgetVar="productsWdg" rowKey="#{produc.id}" paginator="true">
+
+								<p:ajax event="rowDblselect"
+									listener="#{salesMB.onProductRowDblClckSelect}"
+									update=":form1:msgs, :form1:productos" />
+								<p:ajax event="rowUnselect" listener="#{sal.onRowUnselect}"
+									update=":form1:msgs" />
+
+								<f:facet name="header">
+									<p:outputLabel value="Productos Ducleria Marisol" />
+								</f:facet>
+								<p:column headerText="Codigo Barras" style="width:30%">
+									<h:outputText value="#{produc.barcode}" />
+								</p:column>
+								<p:column headerText="Clave Producto" style="width:15%">
+									<h:outputText value="#{produc.clvProducto}" />
+								</p:column>
+								<p:column headerText="Nombre Producto" style="width:55%">
+									<h:outputText value="#{produc.nameProduct}" />
+								</p:column>
+								<f:facet name="footer">
+									<p:commandButton process="productos" update=":form1:details"
+										icon="ui-icon-search" value="Agregar"
+										actionListener="#{salesMB.addProducto}" />
+								</f:facet>
+							</p:dataTable>
+						</p:panel>
+					</p:dialog>
+				</p:panel>
+
+
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

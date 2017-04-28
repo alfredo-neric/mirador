@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+
+			<h:form id="formMenus" class="col-centered" style="width:50%;">
+				<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+				<p:focus context="objects" id="focusTable" />
+				<p:remoteCommand id="hiddenUpdate" name="hiddenUpdate"
+					update=":formMenus:objects" />
+				<p:dataTable id="objects" var="object"
+					value="#{tcMenuMB.menuDataModel}" styleClass="blue et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10" lazy="true" rowIndexVar="rowIndex"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					widgetVar="menusWdg" selectionMode="single"
+					selection="#{tcMenuMB.selectTcMenu}" rowKey="#{object.id}">
+					<f:facet name="header">
+						<p:outputLabel value="Menus" />
+					</f:facet>
+					<p:ajax event="rowEdit" listener="#{tcMenuMB.onRowEdit}"
+						update=":formMenus:messagesEdit" />
+					<p:ajax event="rowEditInit" listener="#{tcMenuMB.onRowEditInit}"
+						update=":formMenus:messagesEdit" />
+					<p:ajax event="rowEditCancel" listener="#{tcMenuMB.onRowCancel}"
+						update=":formMenus:messagesEdit, :formMenus:objects" />
+
+					<p:column headerText="Etiqueta del Menu">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.label}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="label" value="#{object.label}"
+									style="width:100%"
+									onkeypress="if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#formMenus\\:objects span.ui-icon-check').last().click(); return false; } " />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column style="width:5%">
+						<p:rowEditor />
+					</p:column>
+					<p:column headerText="Borrar" style="width:7%" exportable="false">
+						<p:commandLink
+							update=":formMenus:messagesEdit, :formMenus:objects"
+							actionListener="#{tcMenuMB.deleteRole(rowIndex)}"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{tcMenuMB.selectTcMenu}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+					<f:facet name="footer">
+						<p:commandButton update=":formMenus:objects"
+							actionListener="#{tcMenuMB.addElement}"
+							icon="ui-icon-circle-plus" value="Agregar" />
+					</f:facet>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+
+			<br />
+			<h:form id="form1" class="col-centered" style="width:50%;">
+				<p:growl id="msgs" showDetail="true" sticky="true" />
+				<p:remoteCommand id="add" name="addElements"
+					actionListener="#{catalogoStatusMB.addElement}"
+					update=":form1:msgs, :form1:status" />
+				<p:remoteCommand id="updateDetails" name="updateDetails"
+					actionListener="#{catalogoStatusMB.findAll}"
+					update=":form1:msgs, :form1:status" />
+				<div
+					style="background-color: black; color: right; width: 100%; height: 200px; position: relative; border-style: solid;">
+					<center>
+						<p:panelGrid id="formBusqueda"
+							style="background-color: black;position: relative;top:30px"
+							styleClass="et_datatable">
+							<p:row style="background-color: black;">
+								<p:column>
+									<p:outputLabel style="color: white;" value="Status:" />
+								</p:column>
+								<p:column>
+									<p:inputText id="idStatus"
+										value="#{catalogoStatusMB.descripcion}">
+										<p:ajax update=":form1:status"
+											listener="#{catalogoStatusMB.findStatus}" />
+									</p:inputText>
+								</p:column>
+							</p:row>
+							<p:row style="background-color: black;">
+								<p:column>
+									<p:commandButton value="Limpiar" id="limpiar"
+										icon="ui-icon-tag" />
+								</p:column>
+								<p:column>
+									<p:commandButton value="Buscar" id="buscar"
+										icon="ui-icon-search"
+										actionListener="#{catalogoStatusMB.findStatus}"
+										update=":form1:status" />
+								</p:column>
+							</p:row>
+							<p:row style="background-color: black;">
+								<p:column colspan="2" style="text-align: center;">
+									<p:commandButton value="Agregar" id="agregar"
+										actionListener="#{catalogoStatusMB.addElement}"
+										update="form1:status" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</center>
+				</div>
+				<br />
+				<br />
+				<p:dataTable id="status" var="status"
+					value="#{catalogoStatusMB.dataModelStatus}"
+					styleClass="black et_datatable" emptyMessage="No hay registros"
+					editable="true" paginator="true" rows="5" lazy="true"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					widgetVar="statusWdg" selectionMode="single" rowIndexVar="rowIndex"
+					selection="#{catalogoStatusMB.select}" rowKey="#{status.id}">
+
+					<p:ajax event="rowEdit" listener="#{catalogoStatusMB.onRowEdit}"
+						update=":form1:msgs" oncomplete="addElements()" />
+					<p:ajax event="rowEditInit"
+						listener="#{catalogoStatusMB.onRowEditInit}" update=":form1:msgs" />
+					<p:ajax event="rowEditCancel"
+						listener="#{catalogoStatusMB.onRowCancel}" update=":form1:msgs"
+						oncomplete="updateDetails()" />
+
+					<p:column headerText="Descripcion Status">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{status.descripcion}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="descripcion" value="#{status.descripcion}"
+									onkeyup="this.value=this.value.toUpperCase();" required="true"
+									requiredMessage="El campo descripción es obligatorio"
+									style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Valor status">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{status.idStatus}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="idStatus" value="#{status.idStatus}"
+									required="true" requiredMessage="El campor status es oblgatori"
+									style="width:100%" size="2" maxlength="2">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column style="width:32px">
+						<p:rowEditor />
+					</p:column>
+					<p:column headerText="Borrar" style="width:10%" exportable="false">
+						<p:commandLink update=":form1:msgs, :form1:status"
+							actionListener="#{catalogoStatusMB.delete(rowIndex)}"
+							image="ui-icon ui-icon-close" title="Delete"
+							oncomplete="updateDetails()">
+							<p:confirm header="Confirmation"
+								message="¿Estas seguro que deseas eliminar el registro?"
+								icon="ui-icon-alert" />
+							<f:setPropertyActionListener value="#{object}"
+								target="#{catalogoStatusMB.select}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						update=":form1:msgs, :form1:status" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

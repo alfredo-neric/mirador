@@ -1,0 +1,571 @@
+body {
+	margin: 0;
+}
+
+.logoDM {
+	position: relative;
+	top: 10px;
+	left: 60px;
+	width: 500px;
+}
+
+#top {
+	position: relative;
+	background-color: #036fab;
+	color: white;
+	padding: 5px;
+	margin: 0px 0px 10px 0px;
+}
+
+#bottom {
+	position: relative;
+	background-color: #c2dfef;
+	padding: 5px;
+	margin: 10px 0px 0px 0px;
+}
+
+#left {
+	float: left;
+	background-color: #ece3a5;
+	padding: 5px;
+	width: 150px;
+}
+
+#right {
+	float: right;
+	background-color: #ece3a5;
+	padding: 5px;
+	width: 150px;
+}
+
+.row {
+	margin-right: 0px !important;
+	margin-left: 0px !important;
+}
+
+.center_content {
+	position: relative;
+	background-color: #dddddd;
+	padding: 5px;
+}
+
+.left_content {
+	background-color: #dddddd;
+	padding: 5px;
+	margin-left: 170px;
+}
+
+.right_content {
+	background-color: #dddddd;
+	padding: 5px;
+	margin: 0px 170px 0px 170px;
+}
+
+#top a:link, #top a:visited {
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover {
+	color: black;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.centered {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+/*
+.bgDesktop{
+	background-image:url("#{resource['images/bgDesktop.jpg']}");
+}
+*/
+#initSession {
+	position: absolute;
+	left: 20%;
+	top: 10%;
+	width: 100%;
+	text-align: center;
+	font-size: 18px;
+}
+
+body {
+	background-image: url("#{resource['fondo1.jpg']}");
+	background-color: #fff !important;
+	/*background-repeat: repeat-y;*/
+	background-position: absolute;
+}
+
+/************ Bootstrap implementation for GEM by VHG **********************/
+@font-face {
+	font-family: 'Glyphicons Halflings';
+	src: url("#{resource['fonts/glyphicons-halflings-regular.eot']}");
+	src:
+		url("#{resource['fonts/glyphicons-halflings-regular.eot?#iefix)']}")
+		format('embedded-opentype'),
+		url("#{resource['fonts/glyphicons-halflings-regular.woff2']}")
+		format('woff2'),
+		url("#{resource['fonts/glyphicons-halflings-regular.woff']}")
+		format('woff'),
+		url("#{resource['fonts/glyphicons-halflings-regular.ttf']}")
+		format('truetype'),
+		url("#{resource['fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular']}")
+		format('svg');
+}
+
+/* Making width fluid without paddings */
+div.container-fluid {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+/* set background for header (comment for transparent)*/
+.colorwhite {
+	background-color: white;
+}
+
+/*Adding Header Logo*/
+div#greenwaves {
+	background-image: url("#{resource['images/chivas_fondo_1.jpeg']}");
+	background-repeat: repeat-x;
+	height: 100px;
+	margin-top: -20px;
+}
+/*Adding EDOMEX Logo*/
+div#edomexlogo {
+	background: url("#{resource['images/edomex_s.png']}") no-repeat center;
+	height: 124px;
+}
+
+/* Header text*/
+p.titleapp {
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: black;
+}
+
+/*Adding EDOMEX Logo*/
+div#piensagrande {
+	background: url("#{resource['images/logoEnGrande_small.png']}")
+		no-repeat center;
+	height: 124px;
+}
+
+/* for Centering div content */
+.col-centeredLogos {
+	float: none;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.col-centered {
+	float: none !important;
+	margin: 0 auto;
+}
+
+.row-centered {
+	text-align: center !important;
+}
+/*for vertical align */
+.vcenter {
+	margin-top: 20px;
+}
+
+#navv.affix {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 105;
+}
+
+/* Override Header*/
+.ui-widget-header {
+	background-color: #E0E0E0 !important;
+	opacity: 0.9;
+}
+
+/*Headers Color */
+.red .ui-widget-header {
+	background-color: #DB001C !important;
+}
+
+.green .ui-widget-header {
+	background-color: #8EB987 !important;
+}
+
+.darkgrey .ui-widget-header {
+	background-color: #A5A5A5 !important;
+}
+
+.blue .ui-widget-header {
+	background-color: blue !important;
+	color: white;
+}
+
+.yellow .ui-widget-header {
+	background-color: yellow !important;
+}
+
+/*Panel Shadow*/
+.shadow-panel {
+	-webkit-box-shadow: 0px 0px 20px -1px rgba(0, 0, 0, 0.41);
+	-moz-box-shadow: 0px 0px 20px -1px rgba(0, 0, 0, 0.41);
+	box-shadow: 0px 0px 20px -1px rgba(0, 0, 0, 0.41);
+}
+
+/* ****** implementation over prime css for components ****************/
+
+/* Change table cell from blue to green */
+/*
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+	background-color: #98BF0E; background-image: linear-gradient(to bottom, #98BF0E, #718E09)!important;} 
+	*/
+
+/*FIX modal with error messages  div.ui-growl div.ui-growl-item-container div.ui-growl-item-container .ui-growl-image-error{}*/
+.gemerror {
+	position: fixed; /* Stay in place */
+	z-index: 1001; /* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.ui-growl {
+	z-index: 1002;
+	position: fixed !important;
+	top: 40% !important;
+	left: 40% !important;
+	right: initial !important;
+	margin: auto !important;
+}
+
+div.gemerror .ui-growl {
+	z-index: 1002;
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	bottom: 0 !important;
+	right: 0 !important;
+	height: 50% !important;
+	margin: auto !important;
+}
+
+/* fit warnings to the middle of screen */
+.ui-growl-item-container {
+	margin: 0 !important;
+}
+
+/*End FIX modal with error messages*/
+
+/* responsive height over dialog tables*/
+.fixedHeight {
+	height: 80% !important;
+}
+
+/* Bootom appear at top when opening modals */
+.navbar-fixed-bottom {
+	z-index: 500 !important;
+}
+
+/* Menu height */
+.navbar-nav>li>a, .navbar-brand {
+	padding-bottom: 0 !important;
+	height: 50px;
+}
+
+.navbar-nav>li>a {
+	line-height: 50px;
+}
+
+.dropdown-menu {
+	font-size: 14px !important;
+	border: none !important;
+	border-radius: 0 !important;
+}
+
+/*.navbar {min-height:28px !important; border:none!important;}*/
+
+/* Bevel logo */
+.bevelLogo {
+	width: 50%;
+	margin: 0 auto;
+	opacity: 0.2;
+	-webkit-filter: blur(2px);
+	-moz-filter: blur(2px);
+	-o-filter: blur(2px);
+	-ms-filter: blur(2px);
+	filter: blur(2px);
+}
+
+div.jumbotron {
+	-webkit-box-shadow: 1px 13px 48px 10px rgba(94, 94, 94, 0.77);
+	-moz-box-shadow: 1px 13px 48px 10px rgba(94, 94, 94, 0.77);
+	box-shadow: 1px 13px 48px 10px rgba(94, 94, 94, 0.77);
+	z-index: 100;
+}
+
+/* Center for position Absolute */
+.centerAbsolute {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	height: 50%;
+	width: 50%;
+	margin: 5% auto;
+}
+
+/* fadein Effect */
+.fadein {
+	-webkit-animation: fadein 3s; /* Safari and Chrome */
+	-moz-animation: fadein 3s; /* Firefox */
+	-ms-animation: fadein 3s; /* Internet Explorer */
+	-o-animation: fadein 3s; /* Opera */
+	animation: fadein 3s;
+}
+
+@
+keyframes fadein {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+
+/* Firefox */
+@
+-moz-keyframes fadein {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+
+/* Safari and Chrome */
+@
+-webkit-keyframes fadein {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+
+/* Internet Explorer */
+@
+-ms-keyframes fadein {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+​ /* Opera */ 
+ @-o-keyframes fadein {from { opacity:0;
+	
+}
+
+to {
+	opacity: 1;
+}
+
+}
+​
+
+.btnsize {
+	padding: 5px !important;
+}
+
+.ui-selectonemenu .ui-selectonemenu-trigger {
+	width: 23px !important;
+}
+
+.column10 {
+	text-align: right;
+	width: 10%;
+}
+
+.column20 {
+	text-align: right;
+	width: 20%;
+}
+
+.column30 {
+	text-align: right;
+	width: 30%;
+}
+
+.column40 {
+	width: 40%;
+}
+
+.column50 {
+	width: 50%;
+}
+
+.column70 {
+	width: 70%;
+}
+
+.column80 {
+	text-align: left;
+	width: 80%;
+}
+
+.column90 {
+	text-align: right;
+	width: 90%;
+}
+
+.column100 {
+	width: 100%;
+	text-align: center;
+	border: 1px;
+}
+
+.backgroudHeader {
+	border-color: gray;
+}
+
+.text-alignR {
+	text-align: right;
+}
+
+.text-alignL {
+	text-align: left;
+}
+
+.ui-fileupload-simple input[type="file"] {
+	background-color: black;
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	max-width: 100% !important;
+	max-height: 100% !important;
+	font-size: 100px;
+	text-align: right;
+	filter: alpha(opacity = 0);
+	opacity: 0;
+	outline: none;
+	background: white;
+	cursor: inherit;
+	display: block;
+}
+
+.column25r {
+	width: 25%;
+	text-align: right;
+}
+
+.column25l {
+	width: 25%;
+	text-align: left;
+}
+
+.noBorders tr, .noBorders td {
+	background: none !important;
+	border: none !important;
+}
+
+.column50r {
+	width: 50%;
+	text-align: right;
+}
+
+.column50l {
+	width: 50%;
+	text-align: left;
+}
+
+.row-right {
+	text-align: right !important;
+}
+
+.column-right {
+	text-align: right !important;
+}
+
+input[disabled], textarea[disabled] {
+	background-color: #ebebe4 !important;
+}
+
+/*Custom Bootstrap menu*/
+/*
+.navbar-inverse { background-color: #2A2B30!important; border:none!important;border-radius:0!important;}
+.navbar-inverse .navbar-nav>.active>a:hover,.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus { background-color: #428BCA!important;}
+.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.open>a,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus { background-color: #54697c!important;}
+.dropdown-menu { background-color: #2A2B30!important;}
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus { background-color: #428BCA!important;}
+.navbar-inverse { background-image: none!important; }
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus { background-image: none!important; }
+.navbar-inverse { border-color: #080808!important;}
+.navbar-inverse .navbar-brand { color: #999999!important;}
+.navbar-inverse .navbar-brand:hover { color: #FFFFFF!important;}
+.navbar-inverse .navbar-nav>li>a { color: #fff!important;}
+.navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus { color: #FFFFFF!important;}
+.navbar-inverse .navbar-nav>.active>a,.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus { color: #FFFFFF!important;}
+.navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus { color: #FFFFFF!important;}
+.dropdown-menu>li>a { color: #FFFFFF!important;}
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus { color: #FFFFFF!important;}
+.navbar-inverse .navbar-nav>.dropdown>a .caret { border-top-color: #999999!important;}
+.navbar-inverse .navbar-nav>.dropdown>a:hover .caret { border-top-color: #FFFFFF!important;}
+.navbar-inverse .navbar-nav>.dropdown>a .caret { border-bottom-color: #999999!important;}
+.navbar-inverse .navbar-nav>.dropdown>a:hover .caret { border-bottom-color: #FFFFFF!important;}
+.dropdown-toggle{   border-left: 2px solid #2f6fa7;border-right: 2px solid #2f6fa7; }
+*/
+/*UER special css */
+.navbar-inverse {
+	border: none !important;
+	border-radius: 0 !important;
+}
+
+.logobackuer {
+	background: url("#{resource['dm.png]}") no-repeat;
+}
+
+#smalllogo {
+	background: url("#{resource['dm.png']}") no-repeat;
+	background-position: center;
+}
+
+.shadow {
+	-webkit-box-shadow: -1px 12px 50px 1px #0a3352 !important;
+	-moz-box-shadow: -1px 12px 50px 1px #0a3352 !important;
+	box-shadow: -1px 12px 50px 1px #0a3352 !important;
+}
+
+.uertitle {
+	margin-top: 0;
+	margin-bottom: 30px;
+	text-shadow: 4px 3px 6px rgba(150, 150, 150, 1);
+	border-bottom: 1px solid;
+	width: 40%;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.ui-widget {
+	font-size: 1.1em !important;
+}

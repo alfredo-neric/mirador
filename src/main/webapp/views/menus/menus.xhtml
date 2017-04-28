@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+		
+		
+			<h4 class="uertitle">Administración de Menus</h4><br/>
+		
+
+			<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+			<h:form id="form1" class="col-centered" style="width:95%;">
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" var="object"
+					value="#{tcMenusMB.tcMenuDataModel}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10" lazy="true" rowsPerPageTemplate="5,10,15,20"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					widgetVar="programsWdg" selectionMode="single"
+					selection="#{tcMenusMB.selectedTcMenu}" rowKey="#{object.id}">
+
+					<p:column headerText="ID MENU" visible="false" styleClass="renglon">
+						<h:outputText value="#{object.id}" />
+					</p:column>
+
+
+					<p:column headerText="Nombre Menu" exportable="true"
+						styleClass="renglon" filterBy="#{object.label}" filterMatchMode="contains">
+						<h:outputText value="#{object.label}" />
+					</p:column>
+
+					<p:column headerText="URL" exportable="true"
+						styleClass="renglon" filterBy="#{object.url}" filterMatchMode="contains">
+						<h:outputText value="#{object.url}" />
+					</p:column>
+					
+
+					<p:column headerText="Style Class" exportable="true"
+						styleClass="renglon" filterBy="#{object.styleclass}" filterMatchMode="contains">
+						<h:outputText value="#{object.styleclass}" />
+					</p:column>
+					
+					<p:column headerText="Icon" exportable="true"
+						styleClass="renglon" filterBy="#{object.icon}" filterMatchMode="contains">
+						<h:outputText value="#{object.icon}" />
+					</p:column>
+					
+					<!-- <p:column headerText="SubMenus" exportable="true"
+						styleClass="renglon">
+						<p:commandLink id="subMenusMenu" action="#{tcMenuItemsMB.entraMenuPapa}" value="submenus">
+						    <f:param id="menuSelId" name="menuSelId" value="#{object.id}" />
+						     <f:param id="menuSelName" name="menuSelName" value="#{object.label}" />
+						</p:commandLink>
+					</p:column> -->
+
+
+		 			<f:facet name="footer">
+
+
+						<p:commandButton process="objects"
+							title="Click para agregar un nuevo menu"
+							update=":formNuevo:menuNuevo" icon="ui-icon-plus"
+							actionListener="#{tcMenusMB.prepareInsert}" value="Nuevo"
+							oncomplete="PF('menuNuevoDialog').show()" />
+
+						<p:commandButton process="objects"
+							title="Click para editar el menu seleccionado"
+							update=":formUpdate:menuUpdate" icon="ui-icon-pencil"
+							actionListener="#{tcMenusMB.prepareUpdate}" value="Editar"
+							oncomplete="PF('menuUpdateDialog').show()" />
+
+					</f:facet> 
+
+				</p:dataTable>				
+							
+			</h:form>
+
+
+
+			<h:form id="formNuevo">
+				<p:dialog header="Nuevo menu" widgetVar="menuNuevoDialog"
+					modal="true" showEffect="fade" hideEffect="fade"
+					resizable="false" styleClass="customDialog">
+					<p:outputPanel id="menuNuevo">
+						<h:panelGrid columns="3"
+							rendered="#{not empty tcMenusMB.newTcMenu}">
+							
+							
+							<p:outputLabel for="iLabel" value="Nombre Menu"
+										styleClass="control-label" />
+							<p:inputText id="iLabel"
+								value="#{tcMenusMB.newTcMenu.label}" tabindex="2"
+								styleClass="form-control" maxlength="80"
+								validatorMessage="Solo se permiten Letras y espacios"
+								required="true" requiredMessage="Nombre de menu requerido">
+								<f:validateRegex pattern="^[A-Za-z ]+$" />
+								<f:ajax event="blur" render="@this iLabelMessage" />
+							</p:inputText>
+							<p:message id="iLabelMessage" for="iLabel" />
+							
+							<p:outputLabel for="iUrl" value="URL"
+										styleClass="control-label" />
+							<p:inputText id="iUrl"
+								value="#{tcMenusMB.newTcMenu.url}" tabindex="2"
+								styleClass="form-control" maxlength="400"
+								validatorMessage="Solo se permiten Letras y espacios">
+								<f:validateRegex pattern="^[A-Za-z ]+$" />
+								<f:ajax event="blur" render="@this iUrlMessage" />
+							</p:inputText>
+							<p:message id="iUrlMessage" for="iUrl" />
+							
+							<p:outputLabel for="iStyleClass" value="Style Class"
+										styleClass="control-label" />
+							<p:inputText id="iStyleClass"
+								value="#{tcMenusMB.newTcMenu.styleclass}" tabindex="2"
+								styleClass="form-control" maxlength="200"
+								validatorMessage="Solo se permiten Letras y espacios">
+								<f:validateRegex pattern="^[A-Za-z ]+$" />
+								<f:ajax event="blur" render="@this iStyleMessage" />
+							</p:inputText>
+							<p:message id="iStyleMessage" for="iStyleClass" />
+							
+							<p:outputLabel for="iIcon" value="Icon"
+										styleClass="control-label" />
+							<p:inputText id="iIcon"
+								value="#{tcMenusMB.newTcMenu.icon}" tabindex="2"
+								styleClass="form-control" maxlength="80"
+								validatorMessage="Solo se permiten Letras y espacios">
+								<f:validateRegex pattern="^[A-Za-z ]+$" />
+								<f:ajax event="blur" render="@this iIconMessage" />
+							</p:inputText>
+							<p:message id="iIconMessage" for="iIcon" />
+							
+		
+							<f:facet name="footer">
+								<p:separator />
+								<center>
+								
+									<p:commandButton value="Confirmar" accesskey="C"
+										icon="ui-icon-check"
+										actionListener="#{tcMenusMB.insert()}"
+										update=":form1,:messagesEdit"
+										oncomplete="PF('menuNuevoDialog').hide()" />
+									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+										title="Cancelar" oncomplete="PF('menuNuevoDialog').hide()"
+										update=":form1" immediate="true"/>
+								</center>
+							</f:facet>
+
+						</h:panelGrid>
+
+					</p:outputPanel>
+				</p:dialog>
+			</h:form>
+
+
+
+			<h:form id="formUpdate">
+				<p:dialog header="Actualizar menu"
+					widgetVar="menuUpdateDialog" modal="true" showEffect="fade"
+					hideEffect="fade" resizable="false" styleClass="customDialog">
+					 <p:outputPanel id="menuUpdate" style="text-align:center;">
+						<h:panelGrid columns="2"
+							rendered="#{not empty tcMenusMB.selectedTcMenu}">
+							<p:panel header="Datos del menu"
+								style="overflow-y: auto;height: 320px;">
+								<h:panelGrid columns="3">
+								
+									<p:outputLabel for="uLabel" value="Nombre Menu"
+										styleClass="control-label" />
+									<p:inputText id="uLabel"
+										value="#{tcMenusMB.selectedTcMenu.label}" tabindex="2"
+										styleClass="form-control" maxlength="80" 
+										validatorMessage="Solo se permiten Letras y espacios"
+										required="true" requiredMessage="Nombre de menu requerido">
+										<f:validateRegex pattern="^[A-Za-z ]+$" />
+										<f:ajax event="blur" render="@this uLabelMessage" />
+									</p:inputText>
+									<p:message id="uLabelMessage" for="uLabel" />
+									
+									<p:outputLabel for="uUrl" value="URL"
+												styleClass="control-label" />
+									<p:inputText id="uUrl"
+										value="#{tcMenusMB.selectedTcMenu.url}" tabindex="2"
+										styleClass="form-control" maxlength="400"
+										validatorMessage="Solo se permiten Letras y espacios">
+										<f:validateRegex pattern="^[A-Za-z ]+$" />
+										<f:ajax event="blur" render="@this uUrlMessage" />
+									</p:inputText>
+									<p:message id="uUrlMessage" for="uUrl" />
+									
+									<p:outputLabel for="uStyleClass" value="Style Class"
+												styleClass="control-label" />
+									<p:inputText id="uStyleClass"
+										value="#{tcMenusMB.selectedTcMenu.styleclass}" tabindex="2"
+										styleClass="form-control" maxlength="200"
+										validatorMessage="Solo se permiten Letras y espacios">
+										<f:validateRegex pattern="^[A-Za-z ]+$" />
+										<f:ajax event="blur" render="@this uStyleMessage" />
+									</p:inputText>
+									<p:message id="uStyleMessage" for="uStyleClass" />
+									
+									<p:outputLabel for="uIcon" value="Icon"
+												styleClass="control-label" />
+									<p:inputText id="uIcon"
+										value="#{tcMenusMB.selectedTcMenu.icon}" tabindex="2"
+										styleClass="form-control" maxlength="80"
+										validatorMessage="Solo se permiten Letras y espacios">
+										<f:validateRegex pattern="^[A-Za-z ]+$" />
+										<f:ajax event="blur" render="@this uIconMessage" />
+									</p:inputText>
+									<p:message id="uIconMessage" for="uIcon" />	
+
+								</h:panelGrid>
+							</p:panel>
+
+						
+
+							<f:facet name="footer">
+								<center>
+									<p:separator />
+									<p:commandButton value="Actualizar" accesskey="A"
+										icon="ui-icon-check"
+										actionListener="#{tcMenusMB.actualizar()}"
+										update=":form1,:messagesEdit"
+										oncomplete="PF('menuUpdateDialog').hide()" />
+									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+										title="Cancelar" oncomplete="PF('menuUpdateDialog').hide()"
+										update=":form1"  immediate="true"/>
+								</center>
+							</f:facet>
+
+						</h:panelGrid>
+
+					</p:outputPanel> 
+				</p:dialog>
+			</h:form>
+			
+
+			<pe:tooltip global="true" />
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

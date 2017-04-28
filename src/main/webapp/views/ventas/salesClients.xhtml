@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+				<p:panel
+					styleClass="black col-md-11 col-centered row-centered shadow-panel"
+					style="background-image:none;border: none;">
+					<p:panelGrid styleClass="col-centered"
+						style="background-image:none;border: none;">
+						<p:row>
+							<p:column colspan="7" style="text-aling: rigth;">
+								<p:selectOneRadio id="idVenta" value="">
+									<f:selectItem itemLabel="Mayoreo" itemValue="1">
+										<p:graphicImage value="#{resource['dinero.png']}" />
+									</f:selectItem>
+									<f:selectItem itemLabel="Menudeo" itemValue="2">
+									</f:selectItem>
+
+								</p:selectOneRadio>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+					<p:panelGrid styleClass="col-centered"
+						style=" color: white;background-image:none;border: none;">
+						<p:row>
+							<p:column>
+								<p:outputLabel style=" color: black;" id="idcliente"
+									value="Clave Cliente:   " />
+							</p:column>
+							<p:column>
+								<p:autoComplete id="dd" dropdown="true"
+									value="#{ventasMB.tcCliente.aliasClient}"
+									completeMethod="#{ventasMB.completeClient}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel style=" color: black;" value="Nombre Cliente:  " />
+							</p:column>
+							<p:column>
+								<p:inputText id="txtNameCliente" size="70" maxlength="70"
+									disabled="true" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="Folio:  " />
+							</p:column>
+							<p:column>
+								<p:inputText size="6" disabled="true" id="folio" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="Fecha: " />
+							</p:column>
+							<p:column>
+								<p:inputText size="6" disabled="true" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Telefono:" />
+							</p:column>
+
+							<p:column>
+								<p:inputText size="20" maxlength="20" disabled="true" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="Dirección: " />
+							</p:column>
+							<p:column colspan="5">
+								<p:inputText size="100" maxlength="1000" disabled="true" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:dataTable id="objects" var="object"
+						style="opacity: 0.3;background-image:none;" value=""
+						styleClass="et_datatable" emptyMessage="No hay registros"
+						editable="true" paginator="true" rows="20" lazy="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						widgetVar="ventasWdg" selection="" rowKey="#{object.id}">
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<center>
+				<h4 class="uertitle" style="color: orange">Administración de
+					Usuarios</h4>
+				<hr style="width: 50%; height: 3px;" />
+			</center>
+			<br />
+
+			<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+			<h:form id="form1" class="col-centered" style="width:95%;">
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" var="object"
+					value="#{usersMB.tcUsuarioDataModel}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10" lazy="true" rowsPerPageTemplate="5,10,15,20"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					widgetVar="programsWdg" selectionMode="single"
+					selection="#{usersMB.selectedTcUsuario}" rowKey="#{object.id}">
+
+
+					<!-- 					<f:facet name="header">Administracion de usuarios</f:facet> -->
+
+					<p:column headerText="ID" visible="false" styleClass="renglon">
+						<h:outputText value="#{object.id}" />
+					</p:column>
+
+
+					<p:column headerText="USER ID" exportable="true"
+						styleClass="renglon" filterBy="#{object.usuario}"
+						filterMatchMode="contains">
+						<h:outputText value="#{object.usuario}" />
+					</p:column>
+
+					<p:column headerText="NOMBRE" exportable="true"
+						styleClass="renglon">
+						<h:outputText value="#{object.nombre}" />
+					</p:column>
+
+					<p:column headerText="Password" styleClass="renglon">
+						<h:outputText value="#{object.contrasenia}" />
+					</p:column>
+
+
+					<p:column headerText="Rol" styleClass="renglon"
+						filterBy="#{object.role.id}">
+
+						<f:facet name="filter">
+							<p:selectOneMenu onchange="PF('programsWdg').filter()">
+								<f:selectItem itemLabel="Selecciona" itemValue="#{null}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{usersMB.roles}" var="sel"
+									itemValue="#{sel.id}" itemLabel="#{sel.nombre}" />
+							</p:selectOneMenu>
+						</f:facet>
+
+
+						<h:selectOneMenu value="#{object.role.id}" disabled="true"
+							styleClass="form-control">
+							<f:selectItems value="#{usersMB.roles}" var="sel"
+								itemValue="#{sel.id}" itemLabel="#{sel.nombre}" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<f:facet name="footer">
+
+
+						<p:commandButton process="objects"
+							title="Click para agregar un nuevo usuario"
+							update=":formNuevo:usuarioNuevo" icon="ui-icon-plus"
+							actionListener="#{usersMB.prepareInsert}" value="Nuevo"
+							oncomplete="PF('usuarioNuevoDialog').show()" />
+
+						<p:commandButton process="objects"
+							title="Click para editar el usuario seleccionado"
+							update=":formUpdate:usuarioUpdate" icon="ui-icon-pencil"
+							actionListener="#{usersMB.prepareUpdate}" value="Editar"
+							oncomplete="PF('usuarioUpdateDialog').show()" />
+
+					</f:facet>
+
+				</p:dataTable>
+			</h:form>
+
+
+			<h:form id="formNuevo">
+				<p:dialog header="Nuevo usuario" widgetVar="usuarioNuevoDialog"
+					modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+					styleClass="customDialog">
+					<p:outputPanel id="usuarioNuevo">
+						<h:panelGrid columns="2"
+							rendered="#{not empty usersMB.newTcUsuario}">
+							<p:panel header="Datos de usuario"
+								style="overflow-y: auto;height: 300px;">
+								<h:panelGrid columns="3">
+
+
+
+
+									<p:outputLabel for="iNombre" value="Nombre de Usuario"
+										styleClass="control-label" />
+									<p:inputText id="iNombre"
+										value="#{usersMB.newTcUsuario.nombre}" tabindex="4"
+										styleClass="form-control" maxlength="100"
+										validatorMessage="Solo se permiten Letras y espacios">
+
+										<f:validateRegex pattern="^[A-Za-z ]+$" />
+										<f:ajax event="blur" render="@this iNombreMessage" />
+									</p:inputText>
+									<p:message id="iNombreMessage" for="iNombre" />
+
+
+									<p:outputLabel for="iUsuario" value="User ID"
+										styleClass="control-label"
+										title="Usuario para loguerse a la aplicacion" />
+									<p:inputText id="iUsuario"
+										value="#{usersMB.newTcUsuario.usuario}" tabindex="4"
+										styleClass="form-control" maxlength="15"
+										validatorMessage="El UserId debe tener como minimo 8 caracteres y maximo 15 y solo se permiten letras y numeros">
+										<f:validateRegex pattern="^[A-Za-z0-9]{8,15}$" />
+										<f:ajax event="blur" render="@this iUsuarioMessage" />
+									</p:inputText>
+									<p:message id="iUsuarioMessage" for="iUsuario" />
+
+
+
+
+									<p:outputLabel for="iPass" value="Password"
+										styleClass="control-label" />
+									<h:inputSecret id="iPass"
+										value="#{usersMB.newTcUsuario.contrasenia}" redisplay="true"
+										tabindex="5" styleClass="form-control" maxlength="15"
+										validatorMessage="El password debe tener como minimo 8 caracteres y maximo 15 y solo se permiten letras y numeros">
+										<f:validateRegex pattern="^[A-Za-z0-9]{8,15}$" />
+										<f:ajax event="blur" render="@this iPassMessage" />
+									</h:inputSecret>
+									<p:message id="iPassMessage" for="iPass" />
+
+									<p:outputLabel for="iRole" styleClass="control-label"
+										value="Role" />
+									<h:selectOneMenu id="iRole"
+										value="#{usersMB.newTcUsuario.role.id}" tabindex="3"
+										styleClass="form-control">
+										<f:selectItems value="#{usersMB.roles}" var="sel"
+											itemValue="#{sel.id}" itemLabel="#{sel.nombre}" />
+									</h:selectOneMenu>
+									<p:message id="iRoleMessage" for="iRole" />
+
+								</h:panelGrid>
+							</p:panel>
+
+							<f:facet name="footer">
+								<p:separator />
+								<center>
+									<p:commandButton value="Confirmar" accesskey="C"
+										icon="ui-icon-check" actionListener="#{usersMB.insert()}"
+										update=":form1,:messagesEdit"
+										oncomplete="PF('usuarioNuevoDialog').hide()" />
+									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+										title="Cancelar" oncomplete="PF('usuarioNuevoDialog').hide()"
+										update=":form1" />
+								</center>
+							</f:facet>
+
+						</h:panelGrid>
+
+					</p:outputPanel>
+				</p:dialog>
+			</h:form>
+
+
+
+			<h:form id="formUpdate">
+				<p:dialog header="Actualizar Usuario"
+					widgetVar="usuarioUpdateDialog" modal="true" showEffect="fade"
+					hideEffect="fade" resizable="false" styleClass="customDialog">
+					<p:outputPanel id="usuarioUpdate" style="text-align:center;">
+						<h:panelGrid columns="2"
+							rendered="#{not empty usersMB.selectedTcUsuario}">
+							<p:panel header="Datos de usuario"
+								style="overflow-y: auto;height: 320px;">
+								<h:panelGrid columns="3">
+
+
+
+
+									<p:outputLabel for="uNombre" value="Nombre de Usuario"
+										styleClass="control-label" />
+									<p:inputText id="uNombre"
+										value="#{usersMB.selectedTcUsuario.nombre}" tabindex="9"
+										styleClass="form-control" maxlength="100">
+										<f:validateRegex pattern="^[A-Za-z ]+$" />
+										<f:ajax event="blur" render="@this uNombreMessage" />
+									</p:inputText>
+									<p:message id="uNombreMessage" for="uNombre" />
+
+									<p:outputLabel for="uUsuario" value="User ID"
+										styleClass="control-label"
+										title="Usuario para loguerse a la aplicacion" />
+									<p:inputText id="uUsuario"
+										value="#{usersMB.selectedTcUsuario.usuario}" tabindex="4"
+										styleClass="form-control" readonly="true" disabled="true">
+									</p:inputText>
+									<p:message id="uUsuarioMessage" for="uUsuario" />
+
+									<p:outputLabel for="uPass" value="Password"
+										styleClass="control-label" />
+									<h:inputSecret id="uPass"
+										value="#{usersMB.selectedTcUsuario.contrasenia}"
+										redisplay="true" tabindex="5" styleClass="form-control"
+										maxlength="15" />
+									<p:message id="uPassMessage" for="uPass" />
+
+									<p:outputLabel for="uRole" styleClass="control-label"
+										value="Role" />
+									<h:selectOneMenu id="uRole"
+										value="#{usersMB.selectedTcUsuario.role.id}" tabindex="3"
+										styleClass="form-control">
+										<f:selectItems value="#{usersMB.roles}" var="sel"
+											itemValue="#{sel.id}" itemLabel="#{sel.nombre}" />
+									</h:selectOneMenu>
+									<p:message id="uRoleMessage" for="uRole" />
+
+									<p:outputLabel for="uHabilitado" styleClass="control-label"
+										value="Habilitado" />
+									<p:selectBooleanCheckbox id="uHabilitado"
+										value="#{usersMB.selectedTcUsuario.accountnonlocked}"
+										tabindex="3" styleClass="form-control">
+									</p:selectBooleanCheckbox>
+									<p:message id="uHabilitadoMessage" for="uHabilitado" />
+
+								</h:panelGrid>
+							</p:panel>
+
+
+
+							<f:facet name="footer">
+								<center>
+									<p:separator />
+									<p:commandButton value="Actualizar" accesskey="A"
+										icon="ui-icon-check" actionListener="#{usersMB.actualizar()}"
+										update=":form1,:messagesEdit"
+										oncomplete="PF('usuarioUpdateDialog').hide()" />
+									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+										title="Cancelar" oncomplete="PF('usuarioUpdateDialog').hide()"
+										update=":form1" />
+								</center>
+							</f:facet>
+
+						</h:panelGrid>
+
+					</p:outputPanel>
+				</p:dialog>
+			</h:form>
+
+
+			<pe:tooltip global="true" />
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

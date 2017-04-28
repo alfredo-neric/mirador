@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+				<p:remoteCommand id="hiddenUpdate" name="hiddenUpdate"
+					update=":form1:objects" actionListener="#{proveedorMB.add}" />
+				<p:remoteCommand id="hiddenCancel" name="hiddenCancel"
+					update=":form1:objects" />
+
+				<p:dataTable id="objects" var="object"
+					value="#{proveedorMB.dataModelProveedor}"
+					styleClass="blue et_datatable" emptyMessage="No hay registros"
+					editable="true" paginator="true" selectionMode="single" rows="10"
+					lazy="true" rowIndexVar="rowIndex"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					widgetVar="proveedorWdg" selection="#{proveedorMB.selectProveedor}"
+					rowKey="#{object.id}">
+					<f:facet name="header">
+						<p:outputLabel value="Proveedores" />
+					</f:facet>
+					<p:ajax event="rowEdit" listener="#{proveedorMB.onRowEdit}"
+						update=":form1:msgs" oncomplete="hiddenUpdate()" />
+					<p:ajax event="rowEditInit" listener="#{proveedorMB.onRowEditInit}"
+						update=":form1:msgs" />
+					<p:ajax event="rowEditCancel" listener="#{proveedorMB.onRowCancel}"
+						update=":form1:msgs, form1:objects" oncomplete="hiddenCancel()" />
+					<p:column headerText="Clave Proveedor" style="width:10%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.clvProveedor}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="clvProveedor" value="#{object.clvProveedor}"
+									onkeypress="if (event.keyCode == 13) {return false;}"
+									onkeyup="this.value=this.value.toUpperCase();" maxlength="5"
+									style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Nombre Proveedor" style="width:35%;">
+						<p:cellEditor>
+							<f:facet name="output" style="text-align: left;">
+								<h:outputText value="#{object.nameProveedor}" />
+							</f:facet>
+							<f:facet name="input" style="text-align: left;">
+								<p:inputText id="nameProveedor" value="#{object.nameProveedor}"
+									onkeypress="if (event.keyCode == 13) {return false;}"
+									onkeyup="this.value=this.value.toUpperCase();"
+									style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Docimicilo Proveedor" style="width:30%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.addressProveedor}"
+									style="text-align: left;" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="addressProveedor"
+									onkeypress="if (event.keyCode == 13) {return false;}"
+									onkeyup="this.value=this.value.toUpperCase();"
+									value="#{object.addressProveedor}" style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Telefomo" style="width:15%">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.phoneNumber}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="phoneNumber" value="#{object.phoneNumber}"
+									onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:objects span.ui-icon-check').last().click(); return false; } "
+									style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column style="width:5%">
+						<p:rowEditor />
+					</p:column>
+					<p:column headerText="Borrar" style="width:7%" exportable="false">
+						<p:commandLink update=":form1:msgs, :form1:objects"
+							actionListener="#{proveedorMB.delete(rowIndex)}"
+							image="ui-icon ui-icon-close" title="Delete">
+
+							<f:setPropertyActionListener value="#{object}"
+								target="#{proveedorMB.selectProveedor}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+					<f:facet name="footer">
+
+
+						<p:commandButton title="Click para agregar un nuevo Proveedor"
+							update=":form1:objects" icon="ui-icon-plus"
+							actionListener="#{proveedorMB.add}" value="Agregar Registro" />
+					</f:facet>
+				</p:dataTable>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

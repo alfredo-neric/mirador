@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+<!-- 	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+		<resetJUL>true</resetJUL>
+	</contextListener>
+ -->
+	<!-- To enable JMX Management 
+	<jmxConfigurator />
+-->
+
+<!--
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%.-1level|%-40.40logger{0}|%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="file" class="ch.qos.logback.core.FileAppender">
+		<file>C:/LOGS/GEM.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	 <appender name="milliroller" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>C:/LOGS/gem_output.log</file>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </layout>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>C:/LOGS/mylog-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+-->
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+	    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+		<encoder>
+	      <pattern>%5p| ${PID:- } %-50.50logger{39} | %m%n</pattern>
+<!-- 	       <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } - [%10.10t{14}] %-50.50logger{39} : %m%n</pattern> -->
+	    </encoder>		
+	</appender>
+	
+<!-- 
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>${jboss.server.log.dir}/GEM.log</file>
+		<encoder>
+			<pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>		
+	</appender>
+	 -->
+
+	<logger name="com.gem.sistema" level="error" />
+	<logger name="org.springframework" level="warn" />
+	
+<!-- 	
+	<logger name="org.springframework.beans" level="warn" />
+	<logger name="org.springframework.data" level="warn" />
+ -->
+ 
+	<root level="error">
+		<appender-ref ref="STDOUT" />
+		<!--
+			<appender-ref ref="FILE" />		
+		<appender-ref ref="console" />	
+		<appender-ref ref="milliroller" /> 
+		-->
+	</root>
+</configuration>

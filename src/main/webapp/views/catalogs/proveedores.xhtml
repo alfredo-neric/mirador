@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+
+			<br />
+			<h:form id="form1" class="col-centered" style="width:50%;">
+				<p:growl id="msgs" showDetail="true" sticky="true" />
+				<div
+					style="background-color: black; color: right; width: 100%; height: 200px; position: relative; border-style: solid;">
+					<center>
+						<p:panelGrid>
+							<p:row>
+								<p:column>
+									<p:outputLabel value="Nombre Proveedor:" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2">
+									<p:commandButton value="Agregar" id="agregar"
+										actionListener="#{proveedorMB.addElement}"
+										update=":form1:objects" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</center>
+				</div>
+				<br />
+				<p:dataTable id="objects" var="object"
+					value="#{proveedorMB.dataModelGeneric}"
+					styleClass="black et_datatable" emptyMessage="No hay registros"
+					editable="true" paginator="true" rows="5" lazy="true"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					widgetVar="statusWdg" selectionMode="single" rowIndexVar="rowIndex"
+					selection="#{proveedorMB.select}" rowKey="#{status.id}">
+
+					<p:ajax event="rowEdit" listener="#{proveedorMB.onRowEdit}"
+						update=":form1:msgs" oncomplete="addElements()" />
+					<p:ajax event="rowEditInit" listener="#{proveedorMB.onRowEditInit}"
+						update=":form1:msgs" />
+					<p:ajax event="rowEditCancel" listener="#{proveedorMB.onRowCancel}"
+						update=":form1:msgs" oncomplete="updateDetails()" />
+
+					<p:column headerText="Nombre Proveedor">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.nombreProveedor}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="descripcion" value="#{object.nombreProveedor}"
+									onkeyup="this.value=this.value.toUpperCase();" required="true"
+									requiredMessage="El campo nombre es obligatorio"
+									style="width:100%" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Dirección">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.direccion}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="direccion" value="#{object.direccion}"
+									style="width:100%" size="50" maxlength="100">
+
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Telefono">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.telefono}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="telefono" value="#{object.telefono}"
+									style="width:100%" size="10" maxlength="15">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+
+					<p:column headerText="Correo">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{object.correo}" />
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText id="correo" value="#{object.correo}"
+									style="width:100%" size="20" maxlength="20">
+									<pe:keyFilter mask="pint" />
+								</p:inputText>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column style="width:32px">
+						<p:rowEditor />
+					</p:column>
+					<p:column headerText="Borrar" style="width:10%" exportable="false">
+						<p:commandLink update=":form1:msgs, :form1:status"
+							actionListener="#{proveedorMB.delete(rowIndex)}"
+							image="ui-icon ui-icon-close" title="Delete"
+							oncomplete="updateDetails()">
+							<p:confirm header="Confirmation"
+								message="¿Estas seguro que deseas eliminar el registro?"
+								icon="ui-icon-alert" />
+							<f:setPropertyActionListener value="#{object}"
+								target="#{proveedorMB.select}" />
+							<h:outputText styleClass="ui-icon ui-icon-close" />
+
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Si" type="button"
+						styleClass="ui-confirmdialog-yes" icon="ui-icon-check"
+						update=":form1:msgs, :form1:status" />
+					<p:commandButton value="No" type="button"
+						styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+
+			<center>
+				<h4 class="uertitle" style="color: orange;">Administración de Perfiles</h4>
+				<hr style="width: 50%; height: 3px;"></hr>
+				<br />
+
+			</center>
+
+			<p:growl id="messagesEdit" showDetail="true" sticky="true" />
+
+			<h:form id="form1" class="col-centered" style="width:50%;">
+
+				<p:focus context="objects" id="focusTable" />
+
+				<p:dataTable id="objects" var="object"
+					value="#{rolesMB.tcRolDataModel}" styleClass="et_datatable"
+					emptyMessage="No hay registros" editable="true" paginator="true"
+					rows="10" lazy="true" rowsPerPageTemplate="5,10,15,20"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					widgetVar="programsWdg" selectionMode="single"
+					selection="#{rolesMB.selectedTcRol}" rowKey="#{object.id}">
+
+					<p:column headerText="DETALLE" exportable="true" width="10%">
+						<p:commandLink update=":form1:documentPanel"
+							oncomplete="PF('documentDialog').show()" title="Ver detalle"
+							styleClass="ui-icon ui-icon-search"
+							actionListener="#{rolesMB.getRolDetail}">
+							<f:setPropertyActionListener value="#{object}"
+								target="#{rolesMB.selectedTcRol}" />
+						</p:commandLink>
+					</p:column>
+
+
+					<p:column headerText="ID ROL" visible="false" styleClass="renglon">
+						<h:outputText value="#{object.clave}" />
+					</p:column>
+
+
+					<p:column headerText="CLAVE ROL" exportable="true"
+						styleClass="renglon" filterBy="#{object.clave}"
+						filterMatchMode="contains">
+						<h:outputText value="#{object.clave}" />
+					</p:column>
+
+					<p:column headerText="NOMBRE ROL" exportable="true"
+						styleClass="renglon" filterBy="#{object.nombre}"
+						filterMatchMode="contains">
+						<h:outputText value="#{object.nombre}" />
+					</p:column>
+
+
+
+					<f:facet name="footer">
+
+
+						<p:commandButton process="objects"
+							title="Click para agregar un nuevo rol"
+							update=":formNuevo:roleNuevo" icon="ui-icon-plus"
+							actionListener="#{rolesMB.prepareInsert}" value="Nuevo"
+							oncomplete="PF('roleNuevoDialog').show()" />
+
+						<p:commandButton process="objects"
+							title="Click para editar el rol seleccionado"
+							update=":formUpdate:roleUpdate" icon="ui-icon-pencil"
+							actionListener="#{rolesMB.prepareUpdate}" value="Editar"
+							oncomplete="PF('roleUpdateDialog').show()" />
+
+					</f:facet>
+
+				</p:dataTable>
+
+				<p:dialog id="dialog" header="Detalle rol" showEffect="fade"
+					widgetVar="documentDialog" modal="true" resizable="false">
+					<p:outputPanel id="documentPanel"
+						style="overflow-y: auto;height: 400px;width:500px;">
+						<p:panelGrid columns="2"
+							rendered="#{not empty rolesMB.selectedTcRol}">
+							<h:outputLabel for="name" value="Clave: " />
+							<h:outputText id="name" value="#{rolesMB.selectedTcRol.clave}" />
+
+							<h:outputLabel for="size" value="Nombre: " />
+							<h:outputText id="size" value="#{rolesMB.selectedTcRol.nombre}" />
+
+							<h:outputLabel for="objectsMenus" value="menus: " />
+							<!-- <p:selectManyMenu id="objectsMenus" 	>
+					            <f:selectItems value="#{rolesMB.selectedTcRol.menus}" var="menuf"  itemValue="#{menuf.label}"  itemLabel="#{menuf.label}" />
+					            <p:selectManyMenu id="objectsMenusMenu" 	>
+						            <f:selectItems value="#{menuf.menuItems}" var="menufin"  itemValue="#{menufin.label}"  itemLabel="#{menufin.label}"/>
+						        </p:selectManyMenu>	
+					        </p:selectManyMenu>	 -->
+
+							<!--    <p:tree id="objectsMenus" value="#{rolesMB.detalleRol}" var="node" >
+						        <p:treeNode>
+						            <h:outputText value="#{node}" />
+						        </p:treeNode>
+						    </p:tree>
+ -->
+
+							<p:dataTable id="objectsMenus" var="objectMenu"
+								value="#{rolesMB.selectedTcRol.menus}"
+								emptyMessage="No hay registros" rowKey="#{objectMenu.id}">
+
+								<p:column styleClass="renglon">
+									<h:outputText value="***  #{objectMenu.label}  ***" />
+
+									<p:selectManyMenu id="iMenues" value="#{rolesMB.selectedMenus}">
+										<f:selectItems value="#{objectMenu.menuItems}" var="menuf"
+											itemValue="#{menuf.id}"
+											itemLabel="&nbsp;&nbsp;--> #{menuf.label}" />
+									</p:selectManyMenu>
+
+								</p:column>
+
+
+							</p:dataTable>
+
+						</p:panelGrid>
+					</p:outputPanel>
+				</p:dialog>
+
+			</h:form>
+
+
+
+			<h:form id="formNuevo">
+				<p:dialog header="Nuevo rol" widgetVar="roleNuevoDialog"
+					modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+					styleClass="customDialog">
+					<p:outputPanel id="roleNuevo">
+						<h:panelGrid columns="3" rendered="#{not empty rolesMB.newTcRole}">
+
+
+							<p:outputLabel for="iClave" value="Clave"
+								styleClass="control-label" />
+							<p:inputText id="iClave" value="#{rolesMB.newTcRole.clave}"
+								tabindex="2" styleClass="form-control" maxlength="20"
+								validatorMessage="Solo se permiten Letras y espacios"
+								required="true" requiredMessage="Clave de rol Requerido">
+								<f:validateRegex pattern="^[A-Za-z _]+$" />
+								<f:ajax event="blur" render="@this iClaveMessage" />
+							</p:inputText>
+							<p:message id="iClaveMessage" for="iClave" />
+
+
+							<p:outputLabel for="iNombre" value="Nombre"
+								styleClass="control-label" />
+							<p:inputText id="iNombre" value="#{rolesMB.newTcRole.nombre}"
+								tabindex="4" styleClass="form-control" maxlength="80"
+								validatorMessage="Solo se permiten Letras y espacios"
+								required="true" requiredMessage="Nombre de rol Requerido">
+								<f:validateRegex pattern="^[A-Za-z _]+$" />
+								<f:ajax event="blur" render="@this iNombreMessage" />
+							</p:inputText>
+							<p:message id="iNombreMessage" for="iNombre" />
+
+
+							<p:outputLabel for="iMenues" value="Menus"
+								styleClass="control-label" />
+							<p:selectManyMenu id="iMenues" value="#{rolesMB.selectedMenus}"
+								required="true" requiredMessage="Seleccionar menus">
+								<f:selectItems value="#{rolesMB.menus}" var="menu"
+									itemValue="#{menu.id}" itemLabel="#{menu.label}" />
+							</p:selectManyMenu>
+
+
+							<!-- <p:orderList id="iMenues" value="#{rolesMB.menus}" var="menu" controlsLocation="none" itemLabel="#{menu.label}" itemValue="#{menu.label}"
+    							selection="#{rolesMB.selectedMenus}" /> -->
+							<!-- <p:multiSelectListbox id="iMenues" value="#{rolesMB.menus}" effect="slide" header="Categories" showHeaders="true" >
+							        <f:selectItems value="" />
+							    </p:multiSelectListbox>
+							 							 -->
+							<f:facet name="footer">
+								<p:separator />
+								<center>
+
+									<p:commandButton value="Confirmar" accesskey="C"
+										icon="ui-icon-check" actionListener="#{rolesMB.insert()}"
+										update=":form1,:messagesEdit"
+										oncomplete="PF('roleNuevoDialog').hide()" />
+									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+										title="Cancelar" oncomplete="PF('roleNuevoDialog').hide()"
+										update=":form1" immediate="true" />
+								</center>
+							</f:facet>
+
+						</h:panelGrid>
+
+					</p:outputPanel>
+				</p:dialog>
+			</h:form>
+
+
+
+			<h:form id="formUpdate">
+				<p:dialog header="Actualizar rol" widgetVar="roleUpdateDialog"
+					modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+					styleClass="customDialog">
+					<p:outputPanel id="roleUpdate" style="text-align:center;">
+						<h:panelGrid columns="2"
+							rendered="#{not empty rolesMB.selectedTcRol}">
+							<p:panel header="Datos del ROL"
+								style="overflow-y: auto;height: 320px;">
+								<h:panelGrid columns="3">
+
+									<p:outputLabel for="uClave" value="Clave"
+										styleClass="control-label" />
+									<p:inputText id="uClave" value="#{rolesMB.selectedTcRol.clave}"
+										tabindex="9" styleClass="form-control" maxlength="20"
+										validatorMessage="Solo se permiten Letras y espacios"
+										required="true" requiredMessage="Clave de rol Requerido">
+										<f:validateRegex pattern="^[A-Za-z _]+$" />
+										<f:ajax event="blur" render="@this uClaveMessage" />
+									</p:inputText>
+									<p:message id="uClaveMessage" for="uClave" />
+
+
+									<p:outputLabel for="uNombre" value="Nombre"
+										styleClass="control-label" />
+									<p:inputText id="uNombre"
+										value="#{rolesMB.selectedTcRol.nombre}" tabindex="4"
+										styleClass="form-control" maxlength="80"
+										validatorMessage="Solo se permiten Letras y espacios"
+										required="true" requiredMessage="Clave de rol Requerido">
+										<f:validateRegex pattern="^[A-Za-z _]+$" />
+										<f:ajax event="blur" render="@this uNombreMessage" />
+									</p:inputText>
+									<p:message id="uNombreMessage" for="uNombre" />
+
+
+									<p:outputLabel for="uMenues" value="Menus"
+										styleClass="control-label" />
+									<p:selectManyMenu id="uMenues"
+										value="#{rolesMB.selectedMenusMirror}" required="true"
+										requiredMessage="Seleccionar menus">
+										<f:selectItems value="#{rolesMB.menus}" var="menuu"
+											itemValue="#{menuu.id}" itemLabel="#{menuu.label}" />
+									</p:selectManyMenu>
+
+
+									<!-- <p:outputLabel for="uUsuario" value="User ID"
+										styleClass="control-label"
+										title="Usuario para loguerse a la aplicacion" />
+									<p:inputText id="uUsuario"
+										value="#{usersMB.selectedTcUsuario.usuario}" tabindex="4"
+										styleClass="form-control" readonly="true" disabled="true">
+									</p:inputText>
+									<p:message id="uUsuarioMessage" for="uUsuario" />
+
+									<p:outputLabel for="uPass" value="Password"
+										styleClass="control-label" />
+									<h:inputSecret id="uPass"
+										value="#{usersMB.selectedTcUsuario.contrasenia}"
+										redisplay="true" tabindex="5" styleClass="form-control"
+										maxlength="15" />
+									<p:message id="uPassMessage" for="uPass" />
+
+									<p:outputLabel for="uRole" styleClass="control-label"
+										value="Role" />
+									<h:selectOneMenu id="uRole"
+										value="#{usersMB.selectedTcUsuario.role.id}" tabindex="3"
+										styleClass="form-control">
+										<f:selectItems value="#{usersMB.roles}" var="sel"
+											itemValue="#{sel.id}" itemLabel="#{sel.nombre}" />
+									</h:selectOneMenu>
+									<p:message id="uRoleMessage" for="uRole" />
+
+									<p:outputLabel for="uHabilitado" styleClass="control-label"
+										value="Habilitado" />
+									<p:selectBooleanCheckbox id="uHabilitado"
+										value="#{usersMB.selectedTcUsuario.accountnonlocked}"
+										tabindex="3" styleClass="form-control">
+									</p:selectBooleanCheckbox>
+									<p:message id="uHabilitadoMessage" for="uHabilitado" /> -->
+
+								</h:panelGrid>
+							</p:panel>
+
+
+
+							<f:facet name="footer">
+								<center>
+									<p:separator />
+									<p:commandButton value="Actualizar" accesskey="A"
+										icon="ui-icon-check" actionListener="#{rolesMB.actualizar()}"
+										update=":form1,:messagesEdit"
+										oncomplete="PF('roleUpdateDialog').hide()" />
+									<p:commandButton icon="ui-icon-cancel" value="Cancelar"
+										title="Cancelar" oncomplete="PF('roleUpdateDialog').hide()"
+										update=":form1" immediate="true" />
+								</center>
+							</f:facet>
+
+						</h:panelGrid>
+
+					</p:outputPanel>
+				</p:dialog>
+			</h:form>
+
+
+			<pe:tooltip global="true" />
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

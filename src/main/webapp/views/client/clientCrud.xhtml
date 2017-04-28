@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1" class="col-centered" style="width:70%;">
+				<p:growl id="msgs" showDetail="true" />
+				<p:remoteCommand id="uppdateObjects" name="uppdateObjects"
+					actionListener="#{tcclienteMB.add}" update=":form1:objects" />
+				<p:remoteCommand id="cancelUpdate" name="cancelUpdate"
+					actionListener="#{tcclienteMB.consultClients}"
+					update=":form1:objects" />
+				<p:panel id="panel" styleClass="blue et_datatable">
+					<p:dataTable id="objects" var="object"
+						value="#{tcclienteMB.dataModelClient}"
+						styleClass="blue et_datatable" emptyMessage="No hay registros"
+						editable="true" paginator="true" selectionMode="single" rows="10"
+						lazy="true" rowIndexVar="rowIndex"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						widgetVar="clientWdg" selection="#{tcclienteMB.selectClient}"
+						rowKey="#{object.id}">
+						<f:facet name="header">
+							<p:outputLabel value="Tipo Vendedor" />
+						</f:facet>
+						<p:ajax event="rowEdit" listener="#{tcclienteMB.onRowEdit}"
+							update=":form1:msgs" oncomplete="uppdateObjects()" />
+						<p:ajax event="rowEditInit"
+							listener="#{tcclienteMB.onRowEditInit}" update=":form1:msgs" />
+						<p:ajax event="rowEditCancel"
+							listener="#{tcclienteMB.onRowCancel}"
+							update=":form1:msgs, form1:objects" oncomplete="cancelUpdate()" />
+						<p:column headerText="Alias del Cliente" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.aliasClient}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="aliasClient" value="#{object.aliasClient}"
+										required="true"
+										requiredMessage="La clave del cliente es obligatoria"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										onkeyup="this.value=this.value.toUpperCase();" maxlength="10"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Nombre del Cliente" style="width:15%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.nameClient}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="nameClient" value="#{object.nameClient}"
+										required="true"
+										requiredMessage="El nombre del cliente es obligatoria"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										onkeyup="this.value=this.value.toUpperCase();" maxlength="30"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Apellidos" style="width:15%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.lastName}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="lastName" value="#{object.lastName}"
+										required="true"
+										requiredMessage="Los apellidos  del cliente es obligatoria"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										onkeyup="this.value=this.value.toUpperCase();" maxlength="30"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Dirección" style="width:20%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.address}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="address" value="#{object.address}"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										onkeyup="this.value=this.value.toUpperCase();" maxlength="30"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Telefono" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.phoneNumber}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="phoneNumber" value="#{object.phoneNumber}"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										onkeyup="this.value=this.value.toUpperCase();" maxlength="30"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="E- mail" style="width:20%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.EMail}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="email" value="#{object.EMail}"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										maxlength="30" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column style="width:5%">
+							<p:rowEditor />
+						</p:column>
+						<p:column headerText="Borrar" style="width:5%" exportable="false">
+							<p:commandLink update=":form1:msgs, :form1:objects"
+								oncomplete="hiddenCancel()"
+								actionListener="#{tcclienteMB.delete(rowIndex)}"
+								image="ui-icon ui-icon-close" title="Delete">
+
+								<f:setPropertyActionListener value="#{object}"
+									target="#{tcclienteMB.selectClient}" />
+								<h:outputText styleClass="ui-icon ui-icon-close" />
+
+							</p:commandLink>
+						</p:column>
+
+						<f:facet name="footer">
+
+
+							<p:commandButton title="Click para agregar un nuevo Proveedor"
+								update=":form1:objects" icon="ui-icon-plus"
+								disabled="#{tcclienteMB.bEdit}"
+								actionListener="#{tcclienteMB.add}" value="Agregar" />
+						</f:facet>
+
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

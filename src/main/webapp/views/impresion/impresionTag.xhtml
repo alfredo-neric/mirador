@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1" class="col-centered" style="width:70%;">
+			   <p:growl id="growl" showDetail="true" sticky="true" />
+				<p:remoteCommand name="remoteQuery"
+					actionListener="#{impresionTagMB.onPageLoad}" autoRun="true" update=":form1:checkboxDT"/>
+				<p:panel id="panel" styleClass="blue" header="Impresion de Tags">
+					<p:panelGrid id="gridpanel2" columns="2"
+						styleClass="col-centered row-centered">
+
+					</p:panelGrid>
+
+
+					<p:dataTable id="checkboxDT" var="item"
+						value="#{impresionTagMB.lisTagDto}"
+						selection="#{impresionTagMB.selectDTO}" rowKey="#{item.tagId}"
+						paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						style="margin-bottom:0" reflow="true" rows="5">
+						<f:facet name="header">
+                           Lista de Items
+                        </f:facet>
+						<p:column selectionMode="multiple"
+							style="width:5%;text-align:center" />
+						<p:column headerText="Item" filterBy="#{item.itemBlm}">
+							<h:outputText value="#{item.itemBlm}" />
+						</p:column>
+						<p:column headerText="Tag Id" filterBy="#{item.tagId}">
+							<h:outputText value="#{item.tagId}" />
+						</p:column>
+						<p:column headerText="Item Tbl">
+							<h:outputText value="#{item.itemBlm}" />
+						</p:column>
+						<p:column headerText="Categoria">
+							<h:outputText value="#{item.categoriaItem}" />
+						</p:column>
+						<p:column headerText="Marca">
+							<h:outputText value="#{item.marca}" />
+						</p:column>
+						<p:column headerText="Nombre" filterBy="#{item.nombre}">
+							<h:outputText value="#{item.nombre}" />
+						</p:column>
+						<f:facet name="footer">
+							<p:commandButton id="idImprimir" icon="ui-icon-print"
+								actionListener="#{impresionTagMB.printItem}" value="Imprimir" update=":form1:growl" />
+						</f:facet>
+					</p:dataTable>
+				</p:panel>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

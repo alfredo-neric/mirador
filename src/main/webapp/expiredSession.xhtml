@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<ui:param name="root" value="#{request.contextPath}/" />
+		<meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<!-- Latest compiled and minified CSS -->
+		<link rel="shortcut icon" type="image/png"
+			href="#{resource['images/dm.png']}"></link>
+		<!-- Latest compiled and minified CSS -->
+		<h:outputStylesheet library="css" name="cssLayout.css" />
+		<link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"></link>
+		<!-- Optional theme -->
+		<link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"></link>
+		<!-- Latest compiled and minified JavaScript -->
+		<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+		<!-- Overriding default CSS of primefaces -->
+		<style>
+.ui-widget {
+	font-size: 12px;
+}
+
+.ui-growl {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 9999;
+}
+
+li.alert.alert-danger {
+	list-style-type: none !important;
+}
+</style>
+		<title>Dulceria Marisol</title>
+	</h:head>
+	<div class="container-fluid">
+		<div id="headGem" style="position: relative;"></div>
+	</div>
+
+
+	<div class="container-fluid col-centered" style="color: black;">
+		<img src="#{resource['session.png']}" />
+		<br /><br/> <a
+			href="#{request.contextPath}/logout" style="color: white"><span
+			class="glyphicon glyphicon-share"></span> <img
+			src="#{resource['iniciar.png']}" /> </a>
+
+	</div>
+
+	<!-- Footer Facelets -->
+	<ui:insert name="footer">
+		<ui:include src="/WEB-INF/layout/footer.xhtml" />
+	</ui:insert>
+</ui:composition>

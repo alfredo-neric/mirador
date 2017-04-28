@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+				<p:remoteCommand id="hiddenUpdate" name="hiddenUpdate"
+					update=":form1:tab:objects" />
+					
+					<p:remoteCommand id="hiddenUpdateUsr" name="hiddenUpdateUsr"
+					update=":form1:tab:objects" />
+				<p:panel header="Panel Administrativo Dulceria Marisol"
+					styleClass="blue et_datatable col-md-7 col-centered row-centered shadow-panel">
+
+
+					<p:tabView id="tab">
+						<p:tab title="Perfiles" id="perfiles">
+
+							<p:dataTable id="objects" var="object" styleClass="et_datatable"
+								value="#{panelControlMB.listRole}"
+								emptyMessage="No hay registros" editable="true" paginator="true"
+								rows="10" lazy="true"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								widgetVar="rolesWdg" selection="#{panelControlMB.selectRole}"
+								rowKey="#{object.id}">
+								<f:facet name="header">
+                                      Perifiles de Usuarios
+                                    </f:facet>
+								<p:ajax event="rowEdit" listener="#{panelControlMB.onRowEdit}"
+									update=":form1:msgs, :form1:tab:objects"
+									oncomplete="hiddenUpdate()" />
+								<p:ajax event="rowEditCancel"
+									listener="#{panelControlMB.onRowCancel}"
+									update=":form1:msgs, :form1:tab:objects" />
+
+
+								<p:column headerText="Clave Perfile" style="width: 15%;">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{object.clave}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="clave" value="#{object.clave}"
+												style="width:100%" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Nombre Perfile">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{object.nombre}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="nombre" value="#{object.nombre}"
+												style="width:100%" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column style="width:5%">
+									<p:rowEditor />
+								</p:column>
+								<p:column headerText="Borrar" style="width:7%"
+									exportable="false">
+									<p:commandLink update=":form1:tab:objects, :form1:msgs"
+										actionListener="#{panelControlMB.deleteRole(rowIndex)}"
+										image="ui-icon ui-icon-close" title="Delete">
+
+										<f:setPropertyActionListener value="#{object}"
+											target="#{panelControlMB.selectRole}" />
+										<h:outputText styleClass="ui-icon ui-icon-close" />
+
+									</p:commandLink>
+								</p:column>
+								<f:facet name="footer">
+									<p:commandButton update=":form1:tab:objects"
+										actionListener="#{panelControlMB.addElementRole}"
+										icon="ui-icon-circle-plus" value="Agregar" />
+								</f:facet>
+							</p:dataTable>
+						</p:tab>
+						<p:tab title="Usuarios">
+							<p:dataTable id="usrs" var="usrs" styleClass="et_datatable"
+								value="#{ursDulceriaMB.listUsr}"
+								emptyMessage="No hay registros" editable="true" paginator="true"
+								rows="10" lazy="true"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								widgetVar="usrsWdg" selection="#{panelControlMB.selectRole}"
+								rowKey="#{usrs.id}">
+								<f:facet name="header">
+                                      Alta Usuarios
+                                    </f:facet>
+								<p:ajax event="rowEdit"
+									listener="#{ursDulceriaMB.onRowEdit}"
+									update=":form1:msgs, :form1:tab:objects"
+									oncomplete="hiddenUpdateUsr()" />
+								<p:ajax event="rowEditCancel"
+									listener="#{ursDulceriaMB.onRowCancel}"
+									update=":form1:msgs, :form1:tab:usrs" />
+								<p:column headerText="Usuario" style="width: 15%;">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{usrs.usuario}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="usuario" value="#{usrs.usuario}"
+												style="width:100%" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Nombre Usuario" style="width: 15%;">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{usrs.nombre}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="nombre" value="#{usrs.nombre}"
+												style="width:100%" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Contraseña" style="width: 15%;">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{usrs.contrasenia}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText id="pass" value="#{usrs.contrasenia}"
+												style="width:100%" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+								<p:column headerText="Status" style="width: 20%;">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{usrs.habilitado}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:selectOneMenu value="#{usrs.habilitado}" id="staus"
+												style="width:100%">
+												<f:selectItem itemValue="1" itemLabel="Habilitado" />
+												<f:selectItem itemValue="0" itemLabel="Inabilitado" />
+											</p:selectOneMenu>
+
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+
+							<!-- 	<p:column headerText="Status" style="width: 20%;">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{usrs.role}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:selectOneMenu value="#{usrs.role}" id="idRoleUsr"
+												style="width:100%">
+												<f:selectItems value="#{panelControlMB.listRole}" var="role"
+													itemValue="#{role.clave}" itemLabel="#{role.nombre}" />
+											</p:selectOneMenu>
+
+										</f:facet>
+									</p:cellEditor>
+								</p:column> -->
+								<p:column style="width:5%">
+									<p:rowEditor />
+								</p:column>
+								<p:column headerText="Borrar" style="width:7%"
+									exportable="false">
+									<p:commandLink update=":form1:tab:usrs, :form1:msgs"
+										actionListener="#{ursDulceriaMB.deleteUsr(rowIndex)}"
+										image="ui-icon ui-icon-close" title="Delete">
+
+										<f:setPropertyActionListener value="#{usrs}"
+											target="#{ursDulceriaMB.selecUsr}" />
+										<h:outputText styleClass="ui-icon ui-icon-close" />
+
+									</p:commandLink>
+								</p:column>
+								<f:facet name="footer">
+									<p:commandButton update=":form1:tab:usrs"
+										actionListener="#{ursDulceriaMB.addUsr}"
+										icon="ui-icon-circle-plus" value="Agregar" />
+								</f:facet>
+
+							</p:dataTable>
+						</p:tab>
+						<p:tab title="Asignaciones">
+
+						</p:tab>
+					</p:tabView>
+
+				</p:panel>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

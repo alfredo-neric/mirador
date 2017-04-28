@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1" class="col-centered" style="width:50%;">
+				<p:growl id="msgs" showDetail="true" />
+				<p:remoteCommand id="hiddenUpdate" name="hiddenUpdate"
+					update=":form1:tab:typeSeller"
+					actionListener="#{tcSellerTypeMB.add}" />
+				<p:remoteCommand id="hiddenCancel" name="hiddenCancel"
+					update=":form1:tab:typeSeller" />
+				<p:tabView id="tab">
+					<p:tab id="tabSeller" title="Alta tipo de Vendedor">
+						<p:dataTable id="typeSeller" var="typeSellers"
+							value="#{tcSellerTypeMB.dataModelSeller}"
+							styleClass="blue et_datatable" emptyMessage="No hay registros"
+							editable="true" paginator="true" selectionMode="single" rows="10"
+							lazy="true" rowIndexVar="rowIndex"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							widgetVar="typeSellerWdg"
+							selection="#{tcSellerTypeMB.tcSellerType}"
+							rowKey="#{typeSellers.id}">
+							<f:facet name="header">
+								<p:outputLabel value="Tipo Vendedor" />
+							</f:facet>
+
+							<p:ajax event="rowEdit" listener="#{tcSellerTypeMB.onRowEdit}"
+								update=":form1:msgs" oncomplete="hiddenUpdate()" />
+							<p:ajax event="rowEditInit"
+								listener="#{tcSellerTypeMB.onRowEditInit}" update=":form1:msgs" />
+							<p:ajax event="rowEditCancel"
+								listener="#{tcSellerTypeMB.onRowCancel}"
+								update=":form1:msgs, :form1:tab:typeSeller"
+								oncomplete="hiddenCancel()" />
+							<p:column headerText="Clave Vendedor" style="width:10%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{typeSellers.clvTypeSeller}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="clvTypeSeller"
+											value="#{typeSellers.clvTypeSeller}" required="true"
+											requiredMessage="La clave del vendedor es obligatoria"
+											onkeypress="if (event.keyCode == 13) {return false;}"
+											onkeyup="this.value=this.value.toUpperCase();" maxlength="5"
+											style="width:100%" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column headerText="Descripción del Tipo de vendedor"
+								style="width:80%">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{typeSellers.descriptionSeller}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText id="nameSeller"
+											value="#{typeSellers.descriptionSeller}" required="true"
+											requiredMessage="La nombre del vendedor es Obligatoria"
+											onkeypress="if (event.keyCode == 13) {return false;}"
+											onkeyup="this.value=this.value.toUpperCase();"
+											maxlength="100" style="width:100%" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column style="width:5%">
+								<p:rowEditor />
+							</p:column>
+							<p:column headerText="Borrar" style="width:5%" exportable="false">
+								<p:commandLink update=":form1:msgs, :form1:tab:typeSeller"
+									oncomplete="hiddenCancel()"
+									actionListener="#{tcSellerTypeMB.delete(rowIndex)}"
+									image="ui-icon ui-icon-close" title="Delete">
+
+									<f:setPropertyActionListener value="#{object}"
+										target="#{tcSellerTypeMB.tcSellerType}" />
+									<h:outputText styleClass="ui-icon ui-icon-close" />
+
+								</p:commandLink>
+							</p:column>
+							<f:facet name="footer">
+
+
+								<p:commandButton title="Click para agregar un nuevo Proveedor"
+									update=":form1:tab:typeSeller" icon="ui-icon-plus"
+									actionListener="#{tcSellerTypeMB.add}" value="Agregar" />
+							</f:facet>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Configuracion">
+						<p:panel styleClass="blue et_datatable">
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<p:outputLabel id="lblSeller" value="Tipo de Vendedor" />
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="comboSeller"
+											value="#{tcSellerTypeMB.clvSeller}">
+											<f:selectItems value="#{tcSellerTypeMB.listSeller}"
+												var="seller" itemValue="#{seller.clvTypeSeller}"
+												itemLabel="#{seller.descriptionSeller}" />
+										</p:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:outputLabel value="Usuario" />
+									</p:column>
+									<p:column>
+										<p:selectOneMenu id="comboUsr"
+											value="#{tcSellerTypeMB.idUser}">
+											<f:selectItems value="#{tcSellerTypeMB.listUsr}" var="usrs"
+												itemValue="#{usrs.usuario}"
+												itemLabel="#{usrs.usuario} #{usrs.nombre}" />
+										</p:selectOneMenu>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid>
+								<p:row>
+									<p:column>
+										<p:commandButton value="Guardar" icon="ui-icon-disk"
+											actionListener="#{tcSellerTypeMB.saveRelation}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<p:dataTable id="typeSellerUsr" var="typeSellersUsrs"
+								value="#{tcSellerTypeMB.dataModelSellerUsr}"
+								styleClass="blue et_datatable" emptyMessage="No hay registros"
+								editable="true" paginator="true" selectionMode="single"
+								rows="10" lazy="true" rowIndexVar="rowIndex"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								widgetVar="typeSellerUsrsWdg"
+								selection="#{tcSellerTypeMB.trSellerUser}"
+								rowKey="#{typeSellers.id}">
+								<p:column>
+									<p:outputLabel value="#{typeSellersUsrs.clvTypeSeller}" />
+								</p:column>
+								<p:column>
+									<p:column>
+										<p:outputLabel value="#{typeSellersUsrs.idUser}" />
+									</p:column>
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+
+					</p:tab>
+
+				</p:tabView>
+
+
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

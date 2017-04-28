@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+
+	<ui:composition template="/WEB-INF/layout/layout.xhtml">
+		<ui:define name="content">
+			<h:form id="form1">
+				<p:growl id="msgs" showDetail="true" />
+				<p:remoteCommand id="hiddenUpdate" name="hiddenUpdate"
+					update=":form1:objects" actionListener="#{productoMB.add}" />
+				<p:remoteCommand id="hiddenCancel" name="hiddenCancel"
+					update=":form1:objects" actionListener="#{productoMB.consultPrduc}" />
+
+				<p:panel header="Proveedores - Productos"
+					styleClass="blue et_datatable col-centered row-centered col-md-15">
+					
+					<p:panelGrid
+						styleClass="blue et_datatable col-centered row-centered"
+						style="background: none; background: transparent;">
+						<p:row>
+							<p:column>
+								<p:selectOneMenu id="idProveedor"
+									value="#{productoMB.clvProveedor}">
+									<f:selectItems value="#{productoMB.listProveedor}"
+										var="proveedor" itemValue="#{proveedor.clvProveedor}"
+										itemLabel="#{proveedor.clvProveedor} #{proveedor.nameProveedor}" />
+									<p:ajax event="change" update=":form1:objects"
+										listener="#{productoMB.findProduct}" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+
+					<p:dataTable id="objects" var="object"
+						value="#{productoMB.dataModelProducto}"
+						styleClass="blue et_datatable" emptyMessage="No hay registros"
+						editable="true" paginator="true" selectionMode="single" rows="10"
+						lazy="true" rowIndexVar="rowIndex"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						widgetVar="productoWdg" selection="#{productoMB.selectProducto}"
+						rowKey="#{object.id}">
+						<f:facet name="header">
+							<p:outputLabel value="Productos" />
+						</f:facet>
+						<p:ajax event="rowEdit" listener="#{productoMB.onRowEdit}"
+							update=":form1:msgs, form1:objects" oncomplete="hiddenUpdate()" />
+						<p:ajax event="rowEditInit" listener="#{productoMB.onRowEditInit}"
+							update=":form1:msgs" />
+						<p:ajax event="rowEditCancel" listener="#{productoMB.onRowCancel}"
+							update=":form1:msgs, form1:objects" oncomplete="hiddenCancel()" />
+						<p:column headerText="Alertas" style="width:4%" exportable="false">
+							<p:commandLink
+								update=":form1:msgs, :form1:objects, :formAlert:alerts"
+								onclick="PF('alertsDlg').show()" image="ui-icon  ui-icon-alert"
+								actionListener="#{productoMB.activeVisible}"
+								title="Editar Alertas">
+
+								<f:setPropertyActionListener value="#{object}"
+									target="#{productoMB.selectProducto}" />
+								<h:outputText styleClass="ui-icon  ui-icon-alert" />
+
+							</p:commandLink>
+						</p:column>
+						<p:column headerText="Codigo de Barras " style="width:15%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.barcode}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="barcode" value="#{object.barcode}"
+										required="true"
+										requiredMessage="EL codigo de barras es obligatorio"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										maxlength="15" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+
+						<p:column headerText="Clave Producto" style="width:8%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.clvProducto}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="clvProducto" value="#{object.clvProducto}"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										required="true"
+										requiredMessage="La clave del producto es obligatoria"
+										onkeyup="this.value=this.value.toUpperCase();" maxlength="5"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Nombre Producto" style="width:27%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.nameProduct}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="nameProduct" value="#{object.nameProduct}"
+										required="true"
+										requiredMessage="El nombre del producto es obligatorio"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										onkeyup="this.value=this.value.toUpperCase();" maxlength="100"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Cajas" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.boxes}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="boxes" value="#{object.boxes}"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										required="true"
+										requiredMessage="La cantidad de cajas es Obligatoria "
+										validatorMessage="El campo puede ser cero o mayo a cero"
+										maxlength="10" style="width:100%">
+										<pe:keyFilter mask="pint" />
+
+									</p:inputText>
+
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Piezas x Cajas" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.piezasBoxes}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="piezasBoxes" value="#{object.piezasBoxes}"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										required="true"
+										requiredMessage="Las piezas por caja son obligatorias"
+										validatorMessage="Debe de ser mayor a cero" maxlength="10"
+										style="width:100%">
+										<pe:keyFilter mask="pint" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+
+						<p:column headerText="Precio de Compra" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.priceBuy}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="priceBuy" value="#{object.priceBuy}"
+										required="true"
+										requiredMessage="Es obligatorio el campo del precio de compra"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										maxlength="10" style="width:100%">
+										<pe:keyFilter mask="pnum" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Precio de Mayoreo" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.priceWholesale}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="priceWholesale" required="true"
+										requiredMessage="el campo de precio de mayoreo es obligatorio"
+										validatorMessage="El precio de Mayoreo debe de ser mayo a cero"
+										value="#{object.priceWholesale}"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										maxlength="10" style="width:100%">
+										<pe:keyFilter mask="pnum" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Precio de Menudeo" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.priceRetail}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="priceRetail" value="#{object.priceRetail}"
+										required="true"
+										requiredMessage="el campo de precio de menudeo es obligatorio"
+										validatorMessage="El precio de Menudeo debe de ser mayo a cero"
+										onkeypress="if(event.keyCode == 27) {jQuery('span.ui-icon-close').last().click(); return false;} if (event.keyCode == 13 || event.keyCode == 9) {jQuery('#form1\\:objects span.ui-icon-check').last().click(); return false; } "
+										maxlength="10" style="width:100%">
+										<pe:keyFilter mask="pnum" />
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Inventario" style="width:5%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{object.inventario}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="inventario" value="#{object.inventario}"
+										disabled="true"
+										onkeypress="if (event.keyCode == 13) {return false;}"
+										maxlength="10" style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Actualizar" style="width:4%"
+							exportable="false">
+							<p:commandLink
+								update=":form1:msgs, :form1:objects, :form1:inventoriDg"
+								actionListener="#{productoMB.executeFrameInventory(rowIndex)}"
+								image="ui-icon-tag" title="Actualizar Inventario">
+
+								<f:setPropertyActionListener value="#{object}"
+									target="#{productoMB.selectProducto}" />
+								<h:outputText styleClass="ui-icon ui-icon-tag" />
+
+							</p:commandLink>
+						</p:column>
+						<p:column style="width:3%">
+							<p:rowEditor />
+						</p:column>
+						<p:column headerText="Borrar" style="width:4%" exportable="false">
+							<p:commandLink update=":form1:msgs, :form1:objects"
+								actionListener="#{productoMB.delete(rowIndex)}"
+								image="ui-icon ui-icon-close" title="Delete">
+
+								<f:setPropertyActionListener value="#{object}"
+									target="#{productoMB.selectProducto}" />
+								<h:outputText styleClass="ui-icon ui-icon-close" />
+
+							</p:commandLink>
+						</p:column>
+						<f:facet name="footer">
+
+
+							<p:commandButton title="Click para agregar un nuevo Proveedor"
+								update=":form1:objects" icon="ui-icon-plus"
+								disabled="#{productoMB.bEdit}"
+								actionListener="#{productoMB.add}" value="Agregar Registro" />
+						</f:facet>
+					</p:dataTable>
+
+				</p:panel>
+
+				<p:dialog header="Actualizar Inventario" widgetVar="invetoryDlg"
+					styleClass="blue et_datatable col-centered" id="inventoriDg"
+					width="500px">
+					<p:panelGrid>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Codigo de Barras" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editBarcode"
+									value="#{productoMB.tcProducto.barcode}">
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Clave Producto" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editclvProduc"
+									value="#{productoMB.tcProducto.clvProducto}">
+									<pe:keyFilter mask="alphanum" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Nombre Producto" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editProducname" size="30"
+									value="#{productoMB.tcProducto.nameProduct}">
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Cajas" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editBoxes"
+									value="#{productoMB.tcProducto.boxes}">
+									<pe:keyFilter mask="pnum" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Piezas por caja" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editpiexboxes"
+									value="#{productoMB.tcProducto.piezasBoxes}">
+									<pe:keyFilter mask="pnum" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Precio de Compra" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editPricebuy"
+									value="#{productoMB.tcProducto.priceBuy}">
+									<pe:keyFilter mask="pnum" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Precio de Mayoreo" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editPriceWholesale"
+									value="#{productoMB.tcProducto.priceWholesale}">
+									<pe:keyFilter mask="pnum" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Precio de Menudeo" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editPriceRetail"
+									value="#{productoMB.tcProducto.priceRetail}">
+									<pe:keyFilter mask="pnum" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Inventario" />
+							</p:column>
+							<p:column>
+								<p:inputText id="editinventario" disabled="true"
+									value="#{productoMB.tcProducto.inventario}">
+								</p:inputText>
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column>
+								<p:commandButton value="Guardar"
+									actionListener="#{productoMB.updateInventory}" id="save"
+									update=":form1:msgs, :form1:objects"
+									onstart="PF('blockUIWidget').block();"
+									oncomplete="PF('blockUIWidget').unblock();"
+									onclick="PF('invetoryDlg').hide();" icon="ui-icon-disk" />
+
+							</p:column>
+							<p:column>
+								<p:commandButton value="Cancelar" icon="ui-icon-circle-close"
+									id="cancel" onclick="PF('invetoryDlg').hide();" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</p:dialog>
+
+				<pe:blockUI widgetVar="blockUIWidget" centerX="false">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="cargando.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Por favor espere..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</pe:blockUI>
+
+			</h:form>
+			<h:form id="formAlert">
+				<p:dialog id="alerts" widgetVar="alertsDlg" width="600px"
+					modal="true" visible="#{productoMB.bColorVisible}"
+					styleClass="blue et_datatable col-centered"
+					header="Alerta de Productos">
+					<p:dataTable id="tbAlerts" value="#{productoMB.dataModelAlert}"
+						var="alert" styleClass="blue et_datatable"
+						emptyMessage="No hay registros" editable="true" paginator="true"
+						selectionMode="single" rows="4" lazy="true" rowIndexVar="rowIndex"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						widgetVar="alertWdg" selection="#{productoMB.tcSemaforoProduc}"
+						rowKey="#{alert.id}">
+						<p:ajax event="rowEdit" listener="#{productoMB.onRowEditAlert}"
+							update=":form1:msgs, formAlert:tbAlerts" />
+						<p:ajax event="rowEditInit"
+							listener="#{productoMB.onRowEditInitAlert}" update=":form1:msgs" />
+						<p:ajax event="rowEditCancel"
+							listener="#{productoMB.onRowCancelAlert}"
+							update=":form1:msgs, formAlert:tbAlerts" />
+						<p:column headerText="Id" style="width:5%;" styleClass="fa0d0d">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{productoMB.listAlert.size()}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="idAlertInput"
+										value="#{productoMB.listAlert.size()}" disabled="true"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Stock Alerta" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{alert.alertSemaforo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="alertSemaforo" maxlength="3"
+										value="#{alert.alertSemaforo}" style="width:100%">
+										<pe:keyFilter mask="pint"></pe:keyFilter>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Descripción Alerta" style="width:60%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{alert.describeAlert}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText id="describeAlert" value="#{alert.describeAlert}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Color Alerta" style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{alert.alertColor}" />
+								</f:facet>
+								<f:facet name="input">
+									<!-- <p:inputText id="alertColor" value="#{alert.alertColor}"
+										style="width:100%" /> -->
+									<p:colorPicker id="alertColor" value="#{alert.alertColor}"
+										style="width:100%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column style="width:5%">
+							<p:rowEditor />
+						</p:column>
+						<p:column headerText="Borrar" style="width:10%" exportable="false">
+							<p:commandLink update=":form1:msgs, :formAlert:alerts"
+								actionListener="#{productoMB.delete(rowIndex)}"
+								image="ui-icon ui-icon-close" title="Delete">
+
+								<f:setPropertyActionListener value="#{alert}"
+									target="#{productoMB.tcSemaforoProduc}" />
+								<h:outputText styleClass="ui-icon ui-icon-close" />
+
+							</p:commandLink>
+						</p:column>
+
+						<f:facet name="footer">
+							<p:commandButton value="Agregar" id="addAler"
+								icon="ui-icon-circle-plus"
+								update=":formAlert:tbAlerts, :form1:msgs"
+								actionListener="#{productoMB.addAlert}" />
+						</f:facet>
+					</p:dataTable>
+				</p:dialog>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
